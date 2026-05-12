@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>You're Offline — Khushaank Gupta</title>
+    <link rel="icon" type="image/png" href="/assets/images/favicon.webp" />
+    <link rel="apple-touch-icon" href="/assets/images/favicon.webp" />
+    <meta name="theme-color" content="#fafafa" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="description" content="You appear to be offline. Check your internet connection and try again." />
+    <meta property="og:title" content="Offline — Khushaank Gupta" />
+    <meta property="og:description" content="You appear to be offline. Check your connection." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://khushaankgupta.qzz.io/offline" />
+    <meta property="og:site_name" content="Khushaank Gupta" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@Khushaankgupta" />
+    <meta name="twitter:url" content="https://khushaankgupta.qzz.io/offline" />
+    <link rel="canonical" href="https://khushaankgupta.qzz.io/offline" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet" />
+    <style>
+      *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+      :root{
+        --bg:#fafafa;--surface:#fff;--text:#111;--muted:#6b7280;
+        --red:#ef4444;--red-bg:rgba(239,68,68,.07);
+        --green:#10b981;
+        --border:#e8eaed;--radius:18px;
+        --body:'Manrope',system-ui,sans-serif;
+        --fancy:'Playfair Display',Georgia,serif;
+      }
+      html{height:100%}
+      body{
+        min-height:100%;display:flex;flex-direction:column;
+        align-items:center;justify-content:center;
+        font-family:var(--body);background:var(--bg);color:var(--text);
+        padding:16px;-webkit-font-smoothing:antialiased;
+      }
+
+      /* ── card ── */
+      .card{
+        width:100%;max-width:440px;
+        background:var(--surface);border:1px solid var(--border);
+        border-radius:var(--radius);
+        padding:40px 28px 36px;text-align:center;
+        box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 32px rgba(0,0,0,.06);
+        animation:up .65s cubic-bezier(.16,1,.3,1) both;
+      }
+      @keyframes up{
+        from{opacity:0;transform:translateY(20px)}
+        to{opacity:1;transform:translateY(0)}
+      }
+
+      /* ── top bar (brand + status) ── */
+      .top-bar{
+        display:flex;align-items:center;justify-content:space-between;
+        margin-bottom:24px;
+      }
+      .brand{
+        font-weight:700;font-size:1.15rem;letter-spacing:-.03em;
+        color:var(--text);text-decoration:none;
+      }
+      .status{
+        display:flex;align-items:center;gap:6px;
+        font-size:.72rem;font-weight:600;color:var(--red);
+      }
+      .status-dot{
+        width:7px;height:7px;border-radius:50%;background:var(--red);
+        animation:blink-dot 1.4s ease-in-out infinite;
+      }
+      @keyframes blink-dot{
+        0%,100%{opacity:1}50%{opacity:.25}
+      }
+
+      /* ── signal icon ── */
+      .icon-ring{
+        width:64px;height:64px;border-radius:50%;
+        background:var(--red-bg);
+        display:flex;align-items:center;justify-content:center;
+        margin:0 auto 20px;
+      }
+      .bars{
+        display:flex;gap:3px;align-items:flex-end;height:24px;
+      }
+      .bars span{
+        width:4px;border-radius:2px;background:var(--red);opacity:.2;
+      }
+      .bars span:nth-child(1){height:5px; animation:wave 2s ease-in-out infinite}
+      .bars span:nth-child(2){height:10px;animation:wave 2s ease-in-out .2s infinite}
+      .bars span:nth-child(3){height:16px;animation:wave 2s ease-in-out .4s infinite}
+      .bars span:nth-child(4){height:22px;animation:wave 2s ease-in-out .6s infinite}
+      @keyframes wave{
+        0%,100%{opacity:.15}50%{opacity:.55}
+      }
+
+      /* ── badge ── */
+      .badge{
+        display:inline-block;padding:4px 12px;border-radius:100px;
+        font-size:.68rem;font-weight:600;letter-spacing:.06em;
+        text-transform:uppercase;
+        background:var(--red-bg);color:var(--red);
+        margin-bottom:16px;
+      }
+
+      h1{
+        font-family:var(--fancy);
+        font-size:clamp(1.35rem,4.5vw,1.75rem);
+        font-weight:600;line-height:1.3;margin-bottom:10px;
+        letter-spacing:-.015em;
+      }
+      h1 em{font-style:italic;color:var(--red)}
+
+      .desc{
+        color:var(--muted);font-size:clamp(.82rem,2.4vw,.9rem);
+        line-height:1.7;margin:0 auto 28px;max-width:340px;
+      }
+
+      /* ── actions ── */
+      .actions{
+        display:flex;flex-direction:column;gap:8px;
+        margin-bottom:24px;
+      }
+      .btn{
+        display:flex;align-items:center;justify-content:center;gap:8px;
+        padding:11px 18px;border-radius:12px;
+        font-size:.82rem;font-weight:600;
+        text-decoration:none;font-family:var(--body);
+        cursor:pointer;transition:all .2s ease;
+      }
+      .btn svg{width:16px;height:16px;flex-shrink:0}
+      .btn-dark{background:var(--text);color:#fff;border:none}
+      .btn-dark:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+      .btn-light{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+      .btn-light:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08);border-color:#2563eb;color:#2563eb}
+
+      /* ── tips ── */
+      .tips{text-align:left;max-width:310px;margin:0 auto}
+      .tips-label{
+        font-size:.7rem;font-weight:600;text-transform:uppercase;
+        letter-spacing:.06em;color:var(--muted);margin-bottom:10px;
+      }
+      .tips ul{list-style:none;padding:0}
+      .tips li{
+        display:flex;align-items:flex-start;gap:8px;
+        font-size:clamp(.78rem,2.2vw,.84rem);
+        color:var(--muted);line-height:1.55;margin-bottom:8px;
+      }
+      .tips li svg{
+        width:14px;height:14px;flex-shrink:0;margin-top:2px;color:var(--red);
+      }
+
+      /* ── footer ── */
+      .foot{
+        margin-top:20px;font-size:.68rem;color:var(--muted);
+        text-align:center;animation:up .65s cubic-bezier(.16,1,.3,1) .2s both;
+      }
+
+      /* ── toast ── */
+      .toast{
+        position:fixed;top:16px;left:50%;
+        transform:translateX(-50%) translateY(-100px);
+        background:var(--green);color:#fff;
+        padding:10px 20px;border-radius:12px;
+        font-size:.82rem;font-weight:600;
+        box-shadow:0 6px 20px rgba(16,185,129,.35);
+        z-index:100;display:flex;align-items:center;gap:6px;
+        transition:transform .45s cubic-bezier(.16,1,.3,1);
+        white-space:nowrap;
+      }
+      .toast.show{transform:translateX(-50%) translateY(0)}
+      .toast svg{width:16px;height:16px}
+
+      /* ── responsive ── */
+      @media(min-width:420px){
+        .actions{flex-direction:row;justify-content:center}
+        .btn{flex:1;max-width:180px}
+      }
+      @media(max-width:350px){
+        .card{padding:32px 20px 28px;border-radius:14px}
+        .icon-ring{width:56px;height:56px;margin-bottom:16px}
+        .brand{font-size:1.05rem}
+        .top-bar{margin-bottom:20px}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="top-bar">
+        <a href="/" class="brand">KG.</a>
+        <div class="status">
+          <div class="status-dot" id="dot"></div>
+          <span id="statusLabel">Offline</span>
+        </div>
+      </div>
+
+      <div class="icon-ring">
+        <div class="bars">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="badge">No Connection</div>
+      <h1>You're <em>offline.</em></h1>
+      <p class="desc">It looks like you've lost your internet connection. Check your network settings and try again — the page will reload automatically when you're back online.</p>
+
+      <div class="actions">
+        <button class="btn btn-dark" onclick="window.location.reload()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+          Try Again
+        </button>
+        <a href="/" class="btn btn-light">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Go Home
+        </a>
+      </div>
+
+      <div class="tips">
+        <div class="tips-label">Troubleshooting</div>
+        <ul>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/></svg>
+            Check your Wi-Fi or mobile data
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+            Try restarting your router or device
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Page will auto-reload when back online
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Back online!
+    </div>
+
+    <div class="foot">© 2026 Khushaank Gupta · All rights reserved.</div>
+
+    <script>
+      window.addEventListener('online', function(){
+        var d = document.getElementById('dot');
+        var l = document.getElementById('statusLabel');
+        var t = document.getElementById('toast');
+        if(d){d.style.background='#10b981';d.style.animation='none'}
+        if(l){l.textContent='Online';l.style.color='#10b981'}
+        if(t){t.classList.add('show')}
+        setTimeout(function(){
+          var r = sessionStorage.getItem('offline_return_url');
+          window.location.href = r || '/';
+        }, 1800);
+      });
+    </script>
+  </body>
+</html>

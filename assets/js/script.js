@@ -1,0 +1,3133 @@
+function initMobileMenu() {
+  const checkbox = document.getElementById("hamburger");
+  const mobileMenu = document.querySelector(".mobile-menu");
+  const mobileLinks = document.querySelectorAll(".mobile-link");
+
+  if (!mobileMenu || !checkbox) return;
+
+  checkbox.addEventListener("change", (e) => {
+    if (e.target.checked) {
+      mobileMenu.classList.add("open");
+      document.body.style.overflow = "hidden";
+    } else {
+      mobileMenu.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+  });
+
+  mobileLinks.forEach((link) => {
+    link.onclick = () => {
+      mobileMenu.classList.remove("open");
+      document.body.style.overflow = "";
+      checkbox.checked = false;
+    };
+  });
+}
+
+function initIcons() {
+  if (typeof lucide !== "undefined") {
+    lucide.createIcons();
+  }
+}
+
+function initObservers() {
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: "0px 0px -50px 0px",
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el));
+  window.currentObserver = observer;
+}
+
+function initHeaderServicesHover() {
+  const navbar = document.querySelector(".navbar");
+  if (!navbar) return;
+
+  const panelSelector =
+    ".dropdown-menu, .submenu, .mega-menu, .services-menu, .services-dropdown, [data-menu-panel]";
+  const rootSelector =
+    ".has-dropdown, .nav-item-dropdown, [data-menu-root], [data-services-root], [data-services-menu], li";
+
+  const candidateRoots = Array.from(navbar.querySelectorAll(rootSelector)).filter(
+    (root) => root.querySelector(panelSelector),
+  );
+
+  if (candidateRoots.length === 0) return;
+
+  candidateRoots.forEach((root) => {
+    if (root.dataset.hoverIntentInit === "1") return;
+
+    const panel = root.querySelector(panelSelector);
+    if (!panel) return;
+
+    const trigger = root.querySelector(
+      "[data-menu-trigger], [data-services-trigger], a, button",
+    );
+    const OPEN_DELAY_MS = 90;
+    const CLOSE_DELAY_MS = 420;
+    let openTimer = null;
+    let closeTimer = null;
+
+    const clearTimers = () => {
+      clearTimeout(openTimer);
+      clearTimeout(closeTimer);
+    };
+
+    const setOpenState = (isOpen) => {
+      root.classList.toggle("hover-intent-open", isOpen);
+      if (trigger) {
+        trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      }
+    };
+
+    const openWithDelay = () => {
+      clearTimeout(closeTimer);
+      clearTimeout(openTimer);
+      openTimer = setTimeout(() => setOpenState(true), OPEN_DELAY_MS);
+    };
+
+    const closeWithDelay = () => {
+      clearTimeout(openTimer);
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => setOpenState(false), CLOSE_DELAY_MS);
+    };
+
+    const handlePointerLeave = (event) => {
+      const nextTarget = event.relatedTarget;
+      if (nextTarget && root.contains(nextTarget)) return;
+      closeWithDelay();
+    };
+
+    root.addEventListener("mouseenter", openWithDelay);
+    root.addEventListener("mouseleave", handlePointerLeave);
+    panel.addEventListener("mouseenter", openWithDelay);
+    panel.addEventListener("mouseleave", handlePointerLeave);
+
+    root.addEventListener("focusin", openWithDelay);
+    root.addEventListener("focusout", (event) => {
+      if (!root.contains(event.relatedTarget)) {
+        closeWithDelay();
+      }
+    });
+
+    if (trigger) {
+      if (!trigger.hasAttribute("aria-expanded")) {
+        trigger.setAttribute("aria-expanded", "false");
+      }
+
+      trigger.addEventListener("click", (event) => {
+        if (!window.matchMedia("(hover: none)").matches) return;
+        event.preventDefault();
+        clearTimers();
+        setOpenState(!root.classList.contains("hover-intent-open"));
+      });
+    }
+
+    document.addEventListener("click", (event) => {
+      if (!root.contains(event.target)) {
+        clearTimers();
+        setOpenState(false);
+      }
+    });
+
+    root.dataset.hoverIntentInit = "1";
+  });
+}
+
+function initHome() {
+  if (document.getElementById("latest-posts-grid")) {
+    loadLatestPosts();
+  }
+
+  const menuContainer = document.querySelector(".project-menu");
+  if (menuContainer) {
+    loadProjects();
+  }
+}
+
+function initBlog() {
+  if (document.getElementById("posts-grid")) {
+    loadPosts();
+  }
+}
+
+function initViewer() {
+  if (
+    document.getElementById("article-display") ||
+    window.location.pathname.includes("/pulse/")
+  ) {
+    initViewerPage();
+  }
+}
+
+function initPage() {
+  initMobileMenu();
+  initIcons();
+  initObservers();
+  initHeaderServicesHover();
+
+  const path = window.location.pathname;
+
+  initHome();
+  initBlog();
+
+  initViewer();
+  initContactForm();
+  initNewsletter();
+  initCookieConsent();
+
+  document.body.style.overflow = "";
+
+  const navLinks = document.querySelectorAll(".nav-link");
+  navLinks.forEach((link) => {
+    if (link.textContent.trim() === "Insights") {
+      link.setAttribute("href", "/blog");
+    }
+  });
+
+  if (document.querySelector(".ai-card")) {
+    if (typeof initAICardEffects === "function") initAICardEffects();
+  }
+
+  document.querySelectorAll(".nav-link, .mobile-link").forEach((link) => {
+    link.classList.remove("active");
+
+    if (
+      link.getAttribute("href") === path ||
+      (path === "/" && link.getAttribute("href") === "/")
+    ) {
+      link.classList.add("active");
+    } else if (
+      path.includes(link.getAttribute("href")) &&
+      link.getAttribute("href") !== "/"
+    ) {
+      link.classList.add("active");
+    }
+  });
+
+  initCommunityPopup();
+  trackPageView();
+  initScrollTopButton();
+  updateCopyrightYear();
+  initFAQToggle();
+}
+
+function initCommunityPopup() {
+  const POPUP_KEY = "community_popup_dismissed";
+  const INTERACT_KEY = "newsletter_interacted";
+
+  const dismissedTime = localStorage.getItem(POPUP_KEY);
+  const interacted = localStorage.getItem(INTERACT_KEY);
+
+  if (interacted === "subscribed" || interacted === "followed") return;
+
+  if (dismissedTime) {
+    const now = new Date().getTime();
+    const daysSince = (now - parseInt(dismissedTime)) / (1000 * 60 * 60 * 24);
+    if (daysSince < 3) return;
+  }
+
+  if (Math.random() > 0.4) return;
+
+  const delay = Math.floor(Math.random() * 30000) + 15000;
+
+  setTimeout(() => {
+    if (document.querySelector(".community-popup")) return;
+
+    const popup = document.createElement("div");
+    popup.className = "community-popup";
+    popup.innerHTML = `
+      <div class="cp-content">
+        <button class="cp-close" aria-label="Close">×</button>
+        <div class="cp-icon">✨</div>
+        <h3 class="cp-title">Join the Community</h3>
+        <p class="cp-desc">Get exclusive insights on Finance, AI, and Strategy delivered to your inbox.</p>
+        <div class="cp-actions">
+          <a href="#newsletter-form" class="btn-cp-primary" id="cp-subscribe-btn">Subscribe Free</a>
+          <a href="https://www.linkedin.com/in/khushaank/" target="_blank" class="btn-cp-outline" id="cp-linkedin-btn">
+            <i data-lucide="linkedin" width="18" height="18"></i> Follow
+          </a>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    if (!document.getElementById("cp-styles")) {
+      const style = document.createElement("style");
+      style.id = "cp-styles";
+      style.textContent = `
+        .community-popup {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          z-index: 10000;
+          opacity: 0;
+          transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .community-popup.visible {
+          opacity: 1;
+        }
+        
+        .cp-content {
+          width: 90%;
+          max-width: 440px;
+          padding: 3rem 2.5rem;
+          text-align: center;
+          position: relative;
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border-radius: 24px;
+          border: 1px solid rgba(255, 255, 255, 0.6);
+          box-shadow: 
+            0 25px 50px -12px rgba(0, 0, 0, 0.15),
+            0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+          transform: scale(0.95) translateY(10px);
+          transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .community-popup.visible .cp-content {
+          transform: scale(1) translateY(0);
+        }
+
+        .cp-icon {
+          font-size: 3.5rem;
+          margin-bottom: 0.75rem;
+          filter: drop-shadow(0 4px 16px rgba(255, 215, 0, 0.3));
+          animation: cp-float 6s ease-in-out infinite;
+        }
+        @keyframes cp-float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+
+        .cp-title {
+          font-family: var(--font-heading, serif);
+          font-size: 2rem;
+          font-weight: 700;
+          margin-bottom: 0.75rem;
+          color: #111;
+          letter-spacing: -0.03em;
+          line-height: 1.1;
+        }
+
+        .cp-desc {
+          font-family: var(--font-body, sans-serif);
+          font-size: 1.05rem;
+          color: #555;
+          margin-bottom: 2rem;
+          line-height: 1.6;
+        }
+
+        .cp-actions {
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+        
+        @media (max-width: 480px) {
+           .cp-actions { flex-direction: column; }
+        }
+
+        .btn-cp-primary {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 1rem 1.8rem;
+          border-radius: 14px;
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: #fff;
+          background: #111;
+          text-decoration: none;
+          transition: all 0.25s ease;
+          border: none;
+        }
+        .btn-cp-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3);
+          background: #000;
+        }
+
+        .btn-cp-outline {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 1rem 1.8rem;
+          border-radius: 14px;
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: #111;
+          background: transparent;
+          border: 1px solid #ddd;
+          text-decoration: none;
+          transition: all 0.25s ease;
+        }
+        .btn-cp-outline:hover {
+          background: #f9f9f9;
+          border-color: #bbb;
+          transform: translateY(-2px);
+        }
+
+        .cp-close {
+          position: absolute;
+          top: 1.25rem;
+          right: 1.25rem;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: rgba(0,0,0,0.04);
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #666;
+          font-size: 1.4rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          line-height: 0;
+        }
+        .cp-close:hover {
+          background: rgba(0,0,0,0.1);
+          color: #000;
+          transform: rotate(90deg);
+        }
+
+        
+        @media (prefers-color-scheme: dark) {
+          .cp-content {
+            background: rgba(22, 22, 22, 0.85);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+          }
+          .cp-title { color: #fff; }
+          .cp-desc { color: #aaa; }
+          .btn-cp-primary { background: #fff; color: #000; }
+          .btn-cp-primary:hover { background: #f0f0f0; box-shadow: 0 10px 20px -5px rgba(255,255,255,0.2); }
+          .btn-cp-outline { color: #fff; border-color: rgba(255,255,255,0.2); }
+          .btn-cp-outline:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+          .cp-close { background: rgba(255,255,255,0.1); color: #fff; }
+          .cp-close:hover { background: rgba(255,255,255,0.2); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    if (typeof lucide !== "undefined") lucide.createIcons();
+
+    requestAnimationFrame(() => popup.classList.add("visible"));
+
+    const closeBtn = popup.querySelector(".cp-close");
+    const subscribeBtn = popup.querySelector("#cp-subscribe-btn");
+    const linkedinBtn = popup.querySelector("#cp-linkedin-btn");
+
+    const dismiss = () => {
+      popup.classList.remove("visible");
+      setTimeout(() => popup.remove(), 400);
+      localStorage.setItem(POPUP_KEY, new Date().getTime().toString());
+    };
+
+    closeBtn.addEventListener("click", dismiss);
+
+    popup.addEventListener("click", (e) => {
+      if (e.target === popup) dismiss();
+    });
+
+    subscribeBtn.addEventListener("click", (e) => {
+      dismiss();
+      const form =
+        document.getElementById("newsletter-form") ||
+        document.getElementById("newsletter-slidein-form");
+      if (form) {
+        e.preventDefault();
+        form.scrollIntoView({ behavior: "smooth", block: "center" });
+        form.querySelector("input").focus();
+      }
+    });
+
+    linkedinBtn.addEventListener("click", () => {
+      localStorage.setItem(INTERACT_KEY, "followed");
+      dismiss();
+    });
+  }, delay);
+}
+
+class LoadingBar {
+  constructor() {
+    this.bar = document.createElement("div");
+    this.bar.className = "loading-bar";
+    document.body.appendChild(this.bar);
+  }
+
+  start() {
+    this.bar.style.width = "0%";
+    this.bar.style.opacity = "1";
+    setTimeout(() => {
+      this.bar.style.width = "30%";
+    }, 50);
+  }
+
+  progress(percent) {
+    this.bar.style.width = `${percent}%`;
+  }
+
+  finish() {
+    this.bar.style.width = "100%";
+    setTimeout(() => {
+      this.bar.style.opacity = "0";
+      setTimeout(() => {
+        this.bar.style.width = "0%";
+      }, 400);
+    }, 400);
+  }
+}
+
+const loadingBar = new LoadingBar();
+
+async function navigateTo(url) {
+  loadingBar.start();
+  try {
+    let fetchUrl = url;
+    const urlObj = new URL(url, window.location.origin);
+    const path = urlObj.pathname;
+
+    if (path !== "/" && !path.includes(".") && !path.endsWith("/")) {
+      fetchUrl = path + ".html" + urlObj.search;
+    }
+
+    let response = await fetch(fetchUrl, { cache: "no-store" });
+    if (!response.ok) {
+      response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error("Page not found");
+    }
+
+    const htmlText = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlText, "text/html");
+    document.title = doc.title;
+
+    const newMain = doc.querySelector("main");
+    const currentMain = document.querySelector("main");
+
+    if (newMain && currentMain) {
+      currentMain.innerHTML = newMain.innerHTML;
+      currentMain.className = newMain.className;
+      currentMain.removeAttribute("style");
+
+      if (window.location.href !== url) {
+        let pushUrl = url;
+        if (
+          (window.location.hostname === "localhost" ||
+            window.location.hostname === "127.0.0.1") &&
+          pushUrl !== "/" &&
+          !pushUrl.includes(".") &&
+          !pushUrl.endsWith("/") &&
+          !pushUrl.includes("?")
+        ) {
+          pushUrl += ".html";
+        }
+        window.history.pushState({}, "", pushUrl);
+        currentSPAUrl = window.location.pathname;
+      }
+
+      initPage();
+
+      document.querySelectorAll(".fade-in").forEach((el) => {
+        el.classList.add("visible");
+      });
+
+      if (typeof trackAnalytics === "function") {
+        trackAnalytics();
+      }
+
+      if (urlObj.hash) {
+        const target = document.querySelector(urlObj.hash);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth" });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      } else {
+        window.scrollTo(0, 0);
+      }
+
+      loadingBar.finish();
+    } else {
+      window.location.href = url;
+    }
+  } catch (err) {
+    window.location.href = url;
+  }
+}
+
+document.addEventListener("click", (e) => {
+  if (e.defaultPrevented || e.button !== 0) return;
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+  const link = e.target.closest("a");
+  if (!link) return;
+
+  const href = link.getAttribute("href");
+
+  if (
+    !href ||
+    href.startsWith("#") ||
+    href.startsWith("mailto:") ||
+    href.startsWith("http") ||
+    link.target === "_blank"
+  ) {
+    if (href.startsWith(window.location.origin)) {
+    } else if (href.startsWith("http")) {
+      return;
+    } else {
+      return;
+    }
+  }
+
+  let destination;
+  try {
+    destination = new URL(href, window.location.origin);
+  } catch {
+    return;
+  }
+
+  const path = destination.pathname.toLowerCase();
+  const currentPath = window.location.pathname.toLowerCase();
+  const isViewerRoute =
+    path === "/pulse" || path === "/pulse/" || path.startsWith("/pulse/");
+  const isCurrentViewerRoute =
+    currentPath === "/pulse" ||
+    currentPath === "/pulse/" ||
+    currentPath.startsWith("/pulse/");
+
+  // Use full page loads for viewer routes so article state/meta never gets stale.
+  if (isViewerRoute || isCurrentViewerRoute) {
+    return;
+  }
+
+  if (destination.origin !== window.location.origin) {
+    window.location.href = href;
+    return;
+  }
+
+  e.preventDefault();
+
+  if (
+    destination.pathname === window.location.pathname &&
+    destination.search === window.location.search
+  ) {
+    if (destination.hash) {
+      const target = document.querySelector(destination.hash);
+      if (target) target.scrollIntoView({ behavior: "smooth" });
+
+      if (window.location.hash !== destination.hash) {
+        window.history.pushState({}, "", destination.href);
+      }
+      return;
+    } else if (destination.href === window.location.href.split("#")[0]) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+  }
+
+  navigateTo(destination.href);
+});
+
+let currentSPAUrl = window.location.pathname;
+
+window.addEventListener("popstate", () => {
+  if (window.location.pathname !== currentSPAUrl) {
+    currentSPAUrl = window.location.pathname;
+    navigateTo(window.location.href);
+  } else if (window.location.hash) {
+    const target = document.querySelector(window.location.hash);
+    if (target) target.scrollIntoView({ behavior: "smooth" });
+  } else {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+});
+
+window.allSearchablePosts = [];
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .getRegistrations()
+    .then((registrations) => {
+      for (const registration of registrations) {
+        registration.unregister();
+      }
+    })
+    .catch((e) => {});
+}
+
+if (document.readyState === "complete") {
+  initPage();
+  hidePreloader();
+} else {
+  window.addEventListener("load", () => {
+    initPage();
+    hidePreloader();
+  });
+}
+
+window.addEventListener("offline", () => {
+  if (!window.location.pathname.includes("offline")) {
+    sessionStorage.setItem("offline_return_url", window.location.href);
+    window.location.href = "/offline";
+  }
+});
+
+function hidePreloader() {
+  const preloader = document.querySelector(".preloader");
+  if (!preloader) return;
+  preloader.classList.add("hidden");
+  setTimeout(() => {
+    preloader.style.display = "none";
+  }, 500);
+}
+
+let projectData = [];
+async function loadProjects() {
+  const menuContainer = document.querySelector(".project-menu");
+  if (!menuContainer) return;
+  if (!window.supabaseClient) return;
+
+  let projects = [];
+  try {
+    const { data } = await window.supabaseClient
+      .from("projects")
+      .select("*")
+      .order("display_order", { ascending: true });
+    projects = data;
+  } catch (err) {
+    console.warn("Failed to load projects:", err.message);
+  }
+
+  if (!projects || projects.length === 0) {
+    menuContainer.innerHTML = "<p>No case studies found.</p>";
+    return;
+  }
+
+  projectData = projects;
+  menuContainer.innerHTML = "";
+
+  projects.forEach((proj, index) => {
+    const item = document.createElement("div");
+    item.className = `project-item ${index === 0 ? "active" : ""}`;
+    item.setAttribute("data-index", index);
+    const num = (index + 1).toString().padStart(2, "0");
+
+    item.innerHTML = `
+      <span class="p-num">${num}</span>
+      <div class="p-header">
+        <h3>${proj.title}</h3>
+        <span class="p-tag">${proj.category}</span>
+      </div>
+      <i data-lucide="arrow-right" class="p-arrow"></i>
+      <div class="p-mobile-desc" style="display:none">${proj.description}</div> 
+    `;
+
+    item.onmouseenter = () => updatePreview(index);
+    item.onclick = () => updatePreview(index);
+    menuContainer.appendChild(item);
+  });
+
+  lucide.createIcons();
+  if (projects.length > 0) updatePreview(0);
+}
+
+const previewTitle = document.getElementById("preview-title");
+const previewDesc = document.getElementById("preview-desc");
+const previewLink = document.querySelector(".preview-content .btn");
+
+function updatePreview(index) {
+  if (!previewTitle) return;
+
+  document
+    .querySelectorAll(".project-item")
+    .forEach((i) => i.classList.remove("active"));
+  const currentItem = document.querySelector(
+    `.project-item[data-index="${index}"]`,
+  );
+  if (currentItem) currentItem.classList.add("active");
+
+  if (projectData[index]) {
+    previewTitle.style.opacity = "0";
+    if (previewDesc) previewDesc.style.opacity = "0";
+    if (previewLink) previewLink.style.opacity = "0";
+
+    setTimeout(() => {
+      previewTitle.textContent = projectData[index].title;
+      if (previewDesc) previewDesc.textContent = projectData[index].description;
+      if (previewLink) {
+        previewLink.href = projectData[index].link || "#";
+        previewLink.style.opacity = "1";
+      }
+      previewTitle.style.opacity = "1";
+      if (previewDesc) previewDesc.style.opacity = "1";
+    }, 200);
+  }
+}
+
+function createPostCardHtml(post) {
+  const date = new Date(post.created_at).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+
+  const bgStyle = post.image_url
+    ? `background-image: url('${post.image_url}')`
+    : "background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%)";
+
+  return `
+    <a href="${buildPulseUrl(post.slug || post.id, generateTrackingId())}" class="blog-card fade-in" style="text-decoration: none;">
+      <div class="blog-img" style="${bgStyle}"></div>
+      <div class="blog-body">
+        <span class="blog-cat">${post.category || "Insight"}</span>
+        <h3 class="blog-title">${post.title}</h3>
+        <p class="blog-excerpt">${post.excerpt || ""}</p>
+        <div class="blog-footer">
+           <span>${date}</span>
+           <span style="display: flex; align-items: center; gap: 4px; font-weight: 500; color: var(--accent);">
+             Read <i data-lucide="arrow-right" style="width: 14px;"></i>
+           </span>
+        </div>
+      </div>
+    </a>
+  `;
+}
+
+function generateTrackingId() {
+  return "tid_" + Math.random().toString(36).substring(2, 9);
+}
+
+function buildPulsePath(slug) {
+  const safeSlug = encodeURIComponent(String(slug || "").trim());
+  return `/pulse/${safeSlug}`;
+}
+
+function isLocalDevHost() {
+  return ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
+}
+
+function buildPulseUrl(slug, trackingId) {
+  const resolvedSlug = String(slug || "").trim();
+
+  if (isLocalDevHost()) {
+    const params = new URLSearchParams();
+    params.set("slug", resolvedSlug);
+    if (trackingId) {
+      params.set("trackingid", trackingId);
+    }
+    return `/pulse/index.html?${params.toString()}`;
+  }
+
+  const basePath = buildPulsePath(resolvedSlug);
+  if (!trackingId) return basePath;
+  return `${basePath}?trackingid=${encodeURIComponent(trackingId)}`;
+}
+
+function getCurrentViewerSlug() {
+  const params = new URLSearchParams(window.location.search);
+  const slugFromQuery = params.get("slug") || params.get("id");
+  if (slugFromQuery) return slugFromQuery;
+
+  const pathMatch = window.location.pathname.match(/\/pulse\/([^\/?#]+)/);
+  if (pathMatch && pathMatch[1]) {
+    try {
+      return decodeURIComponent(pathMatch[1]);
+    } catch {
+      return pathMatch[1];
+    }
+  }
+
+  return localStorage.getItem("pending_auth_slug") || "";
+}
+
+function parseOAuthErrorFromUrl() {
+  const queryParams = new URLSearchParams(window.location.search);
+  const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+
+  const code = queryParams.get("error") || hashParams.get("error");
+  const description =
+    queryParams.get("error_description") || hashParams.get("error_description");
+
+  if (!code) return null;
+
+  let decodedDescription = description || "";
+  if (decodedDescription) {
+    try {
+      decodedDescription = decodeURIComponent(decodedDescription);
+    } catch {
+      // Keep raw description if decoding fails.
+    }
+  }
+
+  return {
+    code,
+    description: decodedDescription,
+  };
+}
+
+function formatOAuthErrorMessage(oauthError) {
+  if (!oauthError) return "";
+
+  const raw = `${oauthError.code} ${oauthError.description}`.toLowerCase();
+
+  if (
+    raw.includes("access_denied") &&
+    (raw.includes("developer-approved testers") ||
+      raw.includes("verification process") ||
+      raw.includes("app is currently being tested"))
+  ) {
+    return (
+      "Google sign-in is blocked because your OAuth app is in testing mode. " +
+      "Add this email as a Test User in Google Cloud Console > OAuth consent screen, " +
+      "or publish the consent screen before retrying."
+    );
+  }
+
+  if (oauthError.description) {
+    return `Google sign-in failed: ${oauthError.description}`;
+  }
+
+  return `Google sign-in failed: ${oauthError.code}`;
+}
+
+function clearOAuthErrorFromUrl() {
+  const url = new URL(window.location.href);
+  const params = url.searchParams;
+  let changed = false;
+
+  ["error", "error_description", "error_code", "error_uri"].forEach((key) => {
+    if (params.has(key)) {
+      params.delete(key);
+      changed = true;
+    }
+  });
+
+  if (url.hash.includes("error")) {
+    url.hash = "";
+    changed = true;
+  }
+
+  if (changed) {
+    const next = `${url.pathname}${params.toString() ? `?${params.toString()}` : ""}${url.hash}`;
+    window.history.replaceState({}, "", next);
+  }
+}
+
+async function startGoogleAuthForViewer(slug) {
+  if (!window.supabaseClient) {
+    return { error: new Error("Authentication service unavailable") };
+  }
+
+  const resolvedSlug = slug || getCurrentViewerSlug();
+  const origin = window.location.origin;
+  let redirectUrl = `${origin}/pulse/index.html`;
+
+  if (resolvedSlug) {
+    redirectUrl += `?slug=${encodeURIComponent(resolvedSlug)}`;
+    localStorage.setItem("pending_auth_slug", resolvedSlug);
+  }
+
+  return await window.supabaseClient.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: redirectUrl,
+    },
+  });
+}
+
+function renderBlogGrid(posts, gridElement) {
+  if (posts.length === 0) {
+    gridElement.innerHTML = "<div class='no-results'>No articles found.</div>";
+    return;
+  }
+  gridElement.innerHTML = posts.map(createPostCardHtml).join("");
+  initIcons();
+  initObservers();
+}
+
+async function loadLatestPosts() {
+  const grid = document.getElementById("latest-posts-grid");
+  if (!grid || !window.supabaseClient) return;
+
+  const cached = sessionStorage.getItem("latest_posts_cache");
+  if (cached) {
+    const posts = JSON.parse(cached);
+    if (posts && posts.length > 0) {
+      grid.innerHTML = posts.map(createPostCardHtml).join("");
+      initIcons();
+      initObservers();
+    }
+  }
+
+  let posts = null;
+  try {
+    const { data } = await window.supabaseClient
+      .from("posts")
+      .select("id, title, excerpt, created_at, slug, category, image_url")
+      .order("created_at", { ascending: false })
+      .limit(3);
+    posts = data;
+  } catch (err) {
+    console.warn("Failed to load latest posts:", err.message);
+  }
+
+  if (posts && posts.length > 0) {
+    sessionStorage.setItem("latest_posts_cache", JSON.stringify(posts));
+    if (!cached || JSON.stringify(posts) !== cached) {
+      grid.innerHTML = posts.map(createPostCardHtml).join("");
+      initIcons();
+      initObservers();
+    }
+  } else if (!cached) {
+    grid.innerHTML = "<p>No articles found.</p>";
+  }
+}
+
+async function loadPosts() {
+  const grid = document.getElementById("posts-grid");
+  if (!grid || !window.supabaseClient) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get("q");
+
+  const cached = sessionStorage.getItem("all_posts_cache");
+  if (cached && !q) {
+    const posts = JSON.parse(cached);
+    window.allSearchablePosts = posts;
+    renderBlogGrid(posts, grid);
+  }
+
+  let posts = null;
+  try {
+    const { data } = await window.supabaseClient
+      .from("posts")
+      .select("id, title, excerpt, created_at, slug, category, image_url")
+      .order("created_at", { ascending: false });
+    posts = data;
+  } catch (err) {
+    console.warn("Failed to load all posts:", err.message);
+  }
+
+  if (posts) {
+    sessionStorage.setItem("all_posts_cache", JSON.stringify(posts));
+    window.allSearchablePosts = posts;
+    if (!cached || q) {
+      if (q) performSearch(q);
+      else renderBlogGrid(posts, grid);
+    } else if (JSON.stringify(posts) !== cached && !q) {
+      renderBlogGrid(posts, grid);
+    }
+  }
+}
+
+function initCookieConsent() {
+  const CONSENT_KEY = "cookie_consent_accepted";
+  const hasConsented = localStorage.getItem(CONSENT_KEY);
+
+  if (hasConsented) {
+    const existing = document.getElementById("cookie-banner");
+    if (existing) existing.remove();
+    return;
+  }
+
+  if (document.getElementById("cookie-banner")) return;
+
+  const banner = document.createElement("div");
+  banner.id = "cookie-banner";
+  banner.className = "cookie-banner";
+  banner.innerHTML = `
+      <div class="cookie-text">
+        <p>
+          I use cookies to enhance your experience. By continuing to visit this site you agree to my use of cookies.
+          <a href="/privacy">Learn more</a>.
+        </p>
+      </div>
+      <div class="cookie-actions">
+        <button id="accept-cookies" class="btn btn-primary" style="padding: 0.6rem 1.2rem; background: var(--text-main); color: #fff;">
+          Accept
+        </button>
+      </div>
+    `;
+
+  document.body.appendChild(banner);
+
+  setTimeout(() => banner.classList.add("visible"), 100);
+
+  setTimeout(() => {
+    const btn = document.getElementById("accept-cookies");
+    if (btn) {
+      btn.onclick = () => {
+        localStorage.setItem(CONSENT_KEY, "true");
+        banner.classList.remove("visible");
+        setTimeout(() => banner.remove(), 400);
+      };
+    }
+  }, 500);
+}
+
+let currentPostId = null;
+
+function initViewerBackButton() {
+  const backBtn = document.getElementById("viewer-back-btn");
+  if (!backBtn) return;
+
+  const fallbackPath = "/blog";
+  let referrer = null;
+  try {
+    if (document.referrer) {
+      referrer = new URL(document.referrer);
+    }
+  } catch {}
+  const isSameOriginReferrer =
+    referrer && referrer.origin === window.location.origin;
+  const canGoBack = window.history.length > 1 && isSameOriginReferrer;
+  const safeReferrerPath =
+    isSameOriginReferrer && referrer.pathname !== window.location.pathname
+      ? referrer.pathname + referrer.search + referrer.hash
+      : null;
+
+  backBtn.setAttribute("href", safeReferrerPath || fallbackPath);
+  backBtn.setAttribute("title", canGoBack ? "Go back" : "Back to blog");
+  backBtn.setAttribute("aria-label", canGoBack ? "Go back" : "Back to blog");
+
+  backBtn.addEventListener("click", (e) => {
+    if (canGoBack) {
+      e.preventDefault();
+      window.history.back();
+    }
+  });
+}
+
+async function initViewerPage() {
+  const params = new URLSearchParams(window.location.search);
+  const oauthError = parseOAuthErrorFromUrl();
+
+  if (oauthError) {
+    alert(formatOAuthErrorMessage(oauthError));
+    clearOAuthErrorFromUrl();
+  }
+
+  let slug = params.get("slug") || params.get("id");
+
+  if (!slug) {
+    const path = window.location.pathname;
+    const match = path.match(/\/pulse\/([^\/]+)/);
+    if (match && match[1]) {
+      try {
+        slug = decodeURIComponent(match[1]);
+      } catch {
+        slug = match[1];
+      }
+    }
+  }
+
+  if (!slug) {
+    if (window.location.hash && window.location.hash.includes("access_token")) {
+      slug = localStorage.getItem("pending_auth_slug");
+    }
+  }
+
+  if (!slug) {
+    if (
+      window.location.pathname.endsWith("/pulse/index.html") ||
+      window.location.pathname.endsWith("/pulse/")
+    ) {
+      window.location.href = "/blog";
+      return;
+    }
+    window.location.href = "/blog";
+    return;
+  }
+
+  const isLocal = ["localhost", "127.0.0.1", "::1"].includes(
+    window.location.hostname,
+  );
+
+  if (!isLocal && slug && window.location.pathname.includes("/pulse/")) {
+    const trackingId = params.get("trackingid");
+    const expectedPath = buildPulsePath(slug);
+    const normalizedPath = window.location.pathname.replace(/\/+$/, "");
+    let newUrl = expectedPath;
+    if (trackingId) {
+      newUrl += `?trackingid=${encodeURIComponent(trackingId)}`;
+    }
+
+    if (normalizedPath !== expectedPath) {
+      if (window.location.hash) {
+        newUrl += window.location.hash;
+      }
+      window.history.replaceState({ path: newUrl }, "", newUrl);
+    }
+  }
+
+  initViewerBackButton();
+  checkAuth();
+
+  document.body.style.overflow = "";
+  document.documentElement.style.overflow = "";
+
+  loadArticle(slug);
+
+  const loginBtnIds = ["google-login-btn", "modal-google-login-btn"];
+  loginBtnIds.forEach((id) => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      btn.addEventListener("click", async () => {
+        const { error } = await startGoogleAuthForViewer(slug);
+
+        if (error) {
+          // console.error("OAuth error:", error);
+          alert("Sign-in failed: " + error.message);
+        }
+      });
+    }
+  });
+
+  const loginModal = document.getElementById("login-modal");
+  const closeLoginModal = document.getElementById("close-login-modal");
+  if (loginModal && closeLoginModal) {
+    closeLoginModal.addEventListener("click", () => {
+      loginModal.classList.remove("active");
+    });
+    loginModal.addEventListener("click", (e) => {
+      if (e.target === loginModal) {
+        loginModal.classList.remove("active");
+      }
+    });
+  }
+
+  const logoutBtn = document.getElementById("logout-btn");
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+      await window.supabaseClient.auth.signOut();
+      checkAuth();
+
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    });
+  }
+
+  const commentForm = document.getElementById("comment-form");
+  if (commentForm) {
+    commentForm.addEventListener("submit", handleCommentSubmit);
+    setupCommentImageUploader();
+  }
+
+  const copyBtn = document.getElementById("btn-copy-link");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = `<i data-lucide="check" size="16"></i> Copied`;
+        lucide.createIcons();
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+          lucide.createIcons();
+        }, 2000);
+      });
+    });
+  }
+
+  const shareMenuBtn = document.getElementById("btn-share-menu");
+  const shareModal = document.getElementById("yt-share-modal");
+  const closeShareModal = document.getElementById("close-share-modal");
+
+  if (shareModal) {
+    document.body.addEventListener("click", (e) => {
+      const shareBtn = e.target.closest("#btn-share-menu");
+      if (shareBtn) {
+        const title =
+          document.getElementById("article-title")?.textContent.trim() ||
+          document.title;
+        const origin = window.location.origin;
+        const shareUrl = `${origin}${buildPulseUrl(slug, generateTrackingId())}`;
+
+        const articleBodyText =
+          document.getElementById("article-body")?.innerText || "";
+        const contentSnippet = articleBodyText.substring(0, 300) + "...";
+        const text = `I just read this post by Khushaank Gupta: "${title}"\n\n${contentSnippet}\n\nRead on the link: ${shareUrl}`;
+
+        // Update social links
+        document.getElementById("share-whatsapp").href =
+          `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+        document.getElementById("share-twitter").href =
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+        document.getElementById("share-linkedin").href =
+          `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`;
+        document.getElementById("share-email").href =
+          `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(text)}`;
+
+        // Update copy link box
+        const linkInput = document.getElementById("share-link-input");
+        linkInput.value = shareUrl;
+
+        shareModal.classList.add("active");
+      }
+    });
+
+    closeShareModal.addEventListener("click", () => {
+      shareModal.classList.remove("active");
+    });
+
+    // Close modal when clicking outside
+    shareModal.addEventListener("click", (e) => {
+      if (e.target === shareModal) {
+        shareModal.classList.remove("active");
+      }
+    });
+
+    const rightScrollBtn = document.getElementById("share-scroll-right");
+    const iconsGrid = document.getElementById("share-icons-grid");
+    if (rightScrollBtn && iconsGrid) {
+      rightScrollBtn.addEventListener("click", () => {
+        iconsGrid.scrollBy({ left: 150, behavior: "smooth" });
+      });
+      iconsGrid.addEventListener("scroll", () => {
+        if (
+          Math.ceil(iconsGrid.scrollLeft + iconsGrid.clientWidth) >=
+          iconsGrid.scrollWidth
+        ) {
+          rightScrollBtn.style.opacity = "0";
+          rightScrollBtn.style.pointerEvents = "none";
+        } else {
+          rightScrollBtn.style.opacity = "1";
+          rightScrollBtn.style.pointerEvents = "auto";
+        }
+      });
+      // Initial check
+      setTimeout(() => {
+        if (iconsGrid.scrollWidth <= iconsGrid.clientWidth) {
+          rightScrollBtn.style.opacity = "0";
+          rightScrollBtn.style.pointerEvents = "none";
+        }
+      }, 300);
+    }
+
+    // Copy button inside modal
+    const modalCopyBtn = document.getElementById("share-copy-btn");
+    if (modalCopyBtn) {
+      modalCopyBtn.addEventListener("click", () => {
+        const linkInput = document.getElementById("share-link-input");
+        navigator.clipboard.writeText(linkInput.value).then(() => {
+          const originalText = modalCopyBtn.innerHTML;
+          modalCopyBtn.innerHTML = "Copied!";
+          setTimeout(() => {
+            modalCopyBtn.innerHTML = originalText;
+          }, 2000);
+        });
+      });
+    }
+
+    // icon copy button inside modal grid
+    const iconCopyBtn = document.querySelector(
+      ".share-icons-grid .copy-action",
+    );
+    if (iconCopyBtn) {
+      iconCopyBtn.addEventListener("click", () => {
+        const linkInput = document.getElementById("share-link-input");
+        navigator.clipboard.writeText(linkInput.value).then(() => {
+          const span = iconCopyBtn.querySelector("span");
+          const originalText = span.innerText;
+          span.innerText = "Copied!";
+          setTimeout(() => {
+            span.innerText = originalText;
+          }, 2000);
+        });
+      });
+    }
+  }
+
+  const embedBtn = document.getElementById("btn-embed");
+  if (embedBtn) {
+    embedBtn.addEventListener("click", () => {
+      const title = document
+        .getElementById("article-title")
+        ?.textContent.trim();
+      const excerpt =
+        document.querySelector('meta[name="description"]')?.content || "";
+      const origin = window.location.origin;
+      const shareUrl = `${origin}${buildPulseUrl(slug, generateTrackingId())}`;
+
+      const embedHtml = `
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; max-width: 600px; background: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); color: #1e293b;">
+  <div style="font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase;">Khushaank Gupta Insights</div>
+  <h3 style="margin: 0 0 12px 0; font-size: 22px; font-weight: 700; color: #0f172a; line-height: 1.3;">${title}</h3>
+  <p style="margin: 0 0 20px 0; color: #475569; line-height: 1.6; font-size: 16px;">${excerpt}</p>
+  <div style="border-top: 1px solid #f1f5f9; padding-top: 16px; margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+    <a href="${shareUrl}" target="_blank" style="display: inline-flex; align-items: center; background: #0f172a; color: #ffffff; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: 500; font-size: 14px; transition: background 0.2s;">
+      Read Full Article
+      <span style="display: inline-block; margin-left: 6px;">→</span>
+    </a>
+  </div>
+</div>`;
+
+      navigator.clipboard.writeText(embedHtml).then(() => {
+        const originalText = embedBtn.innerHTML;
+        embedBtn.innerHTML = `<i data-lucide="check" size="16"></i> Copied!`;
+        lucide.createIcons();
+        setTimeout(() => {
+          embedBtn.innerHTML = originalText;
+          lucide.createIcons();
+        }, 2000);
+      });
+    });
+  }
+}
+
+function initInteractions(data) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: data.title,
+    image: [
+      data.image_url || "https://khushaankgupta.qzz.io/assets/images/hero.webp",
+    ],
+    datePublished: data.created_at,
+    dateModified: data.created_at,
+    author: [
+      {
+        "@type": "Person",
+        name: "Khushaank Gupta",
+        url: "https://khushaankgupta.qzz.io",
+      },
+    ],
+  };
+  const script = document.createElement("script");
+  script.type = "application/ld+json";
+  script.text = JSON.stringify(schema);
+  document.head.appendChild(script);
+
+  const clapButtons = Array.from(
+    document.querySelectorAll(".js-article-like-btn"),
+  );
+  const clapCount = document.getElementById("clap-count");
+  let claps = Number.isFinite(Number(data.claps)) ? Number(data.claps) : 0;
+
+  if (clapCount) clapCount.textContent = claps.toString();
+
+  if (clapButtons.length > 0) {
+    const clapKey = `clapped_${data.id}`;
+    let hasClapped = localStorage.getItem(clapKey) === "true";
+
+    const syncLikeButtons = () => {
+      clapButtons.forEach((btn) => {
+        const likeLabel = btn.querySelector("[data-like-label]");
+        btn.classList.toggle("clapped", hasClapped);
+        btn.disabled = hasClapped;
+        btn.title = hasClapped
+          ? "You've already liked this article"
+          : "Like this article";
+        btn.setAttribute("aria-pressed", hasClapped ? "true" : "false");
+        if (likeLabel) {
+          likeLabel.textContent = hasClapped ? "Liked" : "Like";
+        }
+      });
+    };
+
+    syncLikeButtons();
+
+    const handleLikeClick = async () => {
+      const {
+        data: { session },
+      } = await window.supabaseClient.auth.getSession();
+
+      if (!session) {
+        const loginModal = document.getElementById("login-modal");
+        if (loginModal) {
+          loginModal.classList.add("active");
+        } else {
+          alert("Please sign in to like this article");
+          const loginBtn = document.getElementById("google-login-btn");
+          if (loginBtn) {
+            loginBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+            loginBtn.focus();
+          }
+        }
+        return;
+      }
+
+      if (hasClapped) return;
+
+      claps += 1;
+      if (clapCount) clapCount.textContent = claps.toString();
+      hasClapped = true;
+      syncLikeButtons();
+      localStorage.setItem(clapKey, "true");
+
+      try {
+        await window.supabaseClient.rpc("increment_claps", {
+          post_id: data.id,
+        });
+        sessionStorage.removeItem("latest_posts_cache");
+        sessionStorage.removeItem("all_posts_cache");
+
+        try {
+          const { data: refreshedPost } = await window.supabaseClient
+            .from("posts")
+            .select("claps")
+            .eq("id", data.id)
+            .maybeSingle();
+          if (refreshedPost && typeof refreshedPost.claps === "number") {
+            claps = refreshedPost.claps;
+            if (clapCount) clapCount.textContent = claps.toString();
+          }
+        } catch {}
+      } catch (err) {
+        claps -= 1;
+        if (clapCount) clapCount.textContent = claps.toString();
+        hasClapped = false;
+        syncLikeButtons();
+        localStorage.removeItem(clapKey);
+      }
+    };
+
+    clapButtons.forEach((btn) => {
+      btn.addEventListener("click", handleLikeClick);
+    });
+  }
+  const scrollTopBtn = document.getElementById("scroll-top-btn");
+  if (scrollTopBtn) {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 500) {
+        scrollTopBtn.classList.add("visible");
+      } else {
+        scrollTopBtn.classList.remove("visible");
+      }
+    });
+    scrollTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  const NEWSLETTER_KEY = "newsletter_interacted";
+  const CONSENT_KEY = "cookie_consent_accepted";
+  const nlSlidein = document.getElementById("newsletter-slidein");
+  const nlClose = document.getElementById("nl-close");
+  const linkedinBtn = document.getElementById("linkedin-follow-btn");
+
+  const hasConsented = localStorage.getItem(CONSENT_KEY);
+  const hasInteracted = localStorage.getItem(NEWSLETTER_KEY);
+
+  if (nlSlidein && hasConsented && !hasInteracted) {
+    let hasShown = false;
+
+    window.addEventListener("scroll", () => {
+      if (hasShown) return;
+
+      const scrollPercent =
+        (window.scrollY /
+          (document.documentElement.scrollHeight - window.innerHeight)) *
+        100;
+      if (scrollPercent > 50 && !nlSlidein.classList.contains("active")) {
+        nlSlidein.classList.add("active");
+        hasShown = true;
+      }
+    });
+
+    if (nlClose) {
+      nlClose.addEventListener("click", () => {
+        nlSlidein.classList.remove("active");
+        localStorage.setItem(NEWSLETTER_KEY, "dismissed");
+      });
+    }
+
+    if (linkedinBtn) {
+      linkedinBtn.addEventListener("click", async () => {
+        localStorage.setItem(NEWSLETTER_KEY, "followed");
+        nlSlidein.classList.remove("active");
+
+        if ("Notification" in window && Notification.permission === "default") {
+          try {
+            const permission = await Notification.requestPermission();
+            if (permission === "granted") {
+              new Notification("Thanks for following! 🎉", {
+                body: "You'll get notified about new insights and articles.",
+                icon: "/assets/images/logo.webp",
+                badge: "/assets/images/logo.webp",
+              });
+            }
+          } catch (err) {
+            // console.log("Notification permission:", err);
+          }
+        }
+      });
+    }
+  }
+}
+
+async function loadArticle(slug) {
+  if (!window.supabaseClient) return;
+
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}/.test(slug);
+  const column = isUUID ? "id" : "slug";
+
+  const { data, error } = await window.supabaseClient
+    .from("posts")
+    .select("*")
+    .eq(column, slug)
+    .single();
+
+  if (error || !data) {
+    const loadingEl = document.getElementById("article-loading");
+    if (loadingEl) loadingEl.textContent = "Article not found.";
+    // console.error(error);
+  } else {
+    document.getElementById("article-loading").style.display = "none";
+    document.getElementById("article-loading").style.display = "none";
+    document.getElementById("article-display").style.display = "block";
+
+    document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
+
+    currentPostId = data.id;
+    const articleSlug = data.slug || slug || data.id;
+    const canonicalPath = buildPulsePath(articleSlug);
+    const canonicalUrl = `${window.location.origin}${canonicalPath}`;
+    const trackingId = new URLSearchParams(window.location.search).get(
+      "trackingid",
+    );
+    const normalizedPath = window.location.pathname.replace(/\/+$/, "");
+
+    if (!isLocalDevHost() && normalizedPath !== canonicalPath) {
+      let newUrl = canonicalPath;
+      if (trackingId) {
+        newUrl += `?trackingid=${encodeURIComponent(trackingId)}`;
+      }
+      if (window.location.hash) {
+        newUrl += window.location.hash;
+      }
+      window.history.replaceState({ path: newUrl }, "", newUrl);
+    }
+
+    document.title = `${data.title} - Khushaank Gupta`;
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.content = data.excerpt || data.title;
+
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement("link");
+      canonicalLink.setAttribute("rel", "canonical");
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.href = canonicalUrl;
+
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.content = data.title;
+
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.content = data.excerpt || "";
+
+    const ogType = document.querySelector('meta[property="og:type"]');
+    if (ogType) ogType.content = "article";
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) ogUrl.content = canonicalUrl;
+
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    if (ogImage && data.image_url) ogImage.content = data.image_url;
+
+    const twTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twTitle) twTitle.content = data.title;
+
+    const twDesc = document.querySelector('meta[name="twitter:description"]');
+    if (twDesc) twDesc.content = data.excerpt || "";
+
+    const twUrl = document.querySelector('meta[name="twitter:url"]');
+    if (twUrl) twUrl.content = canonicalUrl;
+
+    const twImage = document.querySelector('meta[name="twitter:image"]');
+    if (twImage && data.image_url) twImage.content = data.image_url;
+
+    let schemaScript = document.querySelector(
+      'script[type="application/ld+json"]',
+    );
+    if (schemaScript) {
+      const schemaData = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: data.title,
+        description: data.excerpt || data.title,
+        image: data.image_url ? [data.image_url] : [],
+        author: {
+          "@type": "Person",
+          name: "Khushaank Gupta",
+          url: "https://khushaankgupta.qzz.io/",
+        },
+        datePublished: data.created_at,
+        dateModified: data.updated_at || data.created_at,
+        url: canonicalUrl,
+        mainEntityOfPage: {
+          "@type": "WebPage",
+          "@id": canonicalUrl,
+        },
+      };
+      schemaScript.textContent = JSON.stringify(schemaData);
+    }
+
+    document.getElementById("article-title").textContent = data.title;
+    document.getElementById("article-date").textContent = new Date(
+      data.created_at,
+    ).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    document.getElementById("article-views").textContent =
+      (data.views || 0) + 1;
+    const bodyContainer = document.getElementById("article-body");
+    bodyContainer.innerHTML = data.content;
+
+    const allLinks = bodyContainer.querySelectorAll("a");
+    allLinks.forEach((link) => {
+      let href = link.getAttribute("href");
+      if (
+        href &&
+        !href.startsWith("/") &&
+        !href.match(/^(https?:\/\/|mailto:|tel:|#)/)
+      ) {
+        if (href.indexOf(".") > -1 && href.indexOf(" ") === -1) {
+          link.setAttribute("href", "https://" + href);
+        }
+      }
+
+      if (link.parentNode.tagName === "CODE") {
+        const codeTag = link.parentNode;
+
+        codeTag.parentNode.insertBefore(link, codeTag);
+
+        if (!codeTag.textContent.trim()) {
+          codeTag.remove();
+        }
+      }
+    });
+
+    window.supabaseClient.rpc("increment_post_view", { p_id: data.id });
+
+    calculateReadingTime(data.content);
+
+    initInteractions(data);
+    initArticleSearch();
+    initArticleNavigation(data);
+    initImageLightbox();
+    initLinkPreview();
+    initFocusMode();
+    loadRelatedPosts(data);
+
+    generateTOC();
+    initReadingProgress();
+    lucide.createIcons();
+
+    loadComments(data.id);
+  }
+}
+
+function calculateReadingTime(contentHTML) {
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = contentHTML;
+  const text = tempDiv.textContent || tempDiv.innerText || "";
+  const wordCount = text.trim().split(/\s+/).length;
+  const readingTime = Math.ceil(wordCount / 200);
+
+  const timeElement = document.getElementById("reading-time");
+  if (timeElement) {
+    timeElement.textContent = `${readingTime} min read`;
+  }
+}
+
+function generateTOC() {
+  const articleBody = document.getElementById("article-body");
+  const tocList = document.getElementById("floating-toc-list");
+  const tocContainer = document.getElementById("floating-toc");
+  const tocWrap = document.getElementById("floating-toc-wrap");
+  const tocTrigger = document.getElementById("floating-toc-trigger");
+
+  if (!articleBody || !tocList || !tocContainer) return;
+
+  tocList.innerHTML = "";
+
+  const headers = Array.from(articleBody.querySelectorAll("h2")).filter(
+    (header) => (header.textContent || "").trim().length > 0,
+  );
+
+  const railLineCount = Math.max(1, Math.min(18, headers.length));
+  const headerLineIndex = new Map();
+  const setActiveRailLine = (index) => {
+    if (!tocTrigger) return;
+    tocTrigger.querySelectorAll(".toc-trigger-line").forEach((line, lineIdx) => {
+      line.classList.toggle("active", lineIdx === index);
+    });
+  };
+
+  const buildTOCRail = () => {
+    if (!tocTrigger) return;
+    tocTrigger.innerHTML = "";
+    const railHeight = Math.max(88, railLineCount * 12 + 20);
+    tocTrigger.style.minHeight = `${railHeight}px`;
+    for (let i = 0; i < railLineCount; i += 1) {
+      const line = document.createElement("span");
+      line.className = "toc-trigger-line";
+      tocTrigger.appendChild(line);
+    }
+    setActiveRailLine(0);
+  };
+
+  const setTOCOpen = (isOpen) => {
+    if (!tocWrap) return;
+    tocWrap.classList.toggle("is-open", isOpen);
+    if (tocTrigger) {
+      tocTrigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+  };
+
+  if (headers.length < 1) {
+    tocContainer.style.display = "none";
+    if (tocWrap) {
+      tocWrap.style.display = "none";
+      setTOCOpen(false);
+    }
+    return;
+  }
+
+  buildTOCRail();
+
+  tocContainer.style.display = "block";
+  if (tocWrap) tocWrap.style.display = "block";
+
+  if (tocWrap && tocTrigger && !tocWrap.dataset.tocInit) {
+    const supportsHover = window.matchMedia("(hover: hover)").matches;
+    const TOC_OPEN_DELAY_MS = 120;
+    const TOC_CLOSE_DELAY_MS = 460;
+    let openTimer = null;
+    let closeTimer = null;
+
+    const clearTOCTimers = () => {
+      clearTimeout(openTimer);
+      clearTimeout(closeTimer);
+    };
+
+    const openWithDelay = () => {
+      clearTimeout(closeTimer);
+      clearTimeout(openTimer);
+      openTimer = setTimeout(() => setTOCOpen(true), TOC_OPEN_DELAY_MS);
+    };
+
+    const closeWithDelay = () => {
+      clearTimeout(openTimer);
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => setTOCOpen(false), TOC_CLOSE_DELAY_MS);
+    };
+
+    const closeImmediately = () => {
+      clearTOCTimers();
+      setTOCOpen(false);
+    };
+
+    if (supportsHover) {
+      tocWrap.addEventListener("mouseenter", openWithDelay);
+      tocWrap.addEventListener("mouseleave", (e) => {
+        const nextTarget = e.relatedTarget;
+        if (nextTarget && tocWrap.contains(nextTarget)) return;
+        closeWithDelay();
+      });
+
+      tocContainer.addEventListener("mouseenter", openWithDelay);
+      tocContainer.addEventListener("mouseleave", (e) => {
+        const nextTarget = e.relatedTarget;
+        if (nextTarget && tocWrap.contains(nextTarget)) return;
+        closeWithDelay();
+      });
+    }
+
+    tocWrap.addEventListener("focusin", openWithDelay);
+    tocWrap.addEventListener("focusout", (e) => {
+      if (!tocWrap.contains(e.relatedTarget)) closeWithDelay();
+    });
+
+    tocTrigger.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      clearTOCTimers();
+      setTOCOpen(!tocWrap.classList.contains("is-open"));
+    });
+
+    tocTrigger.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        clearTOCTimers();
+        setTOCOpen(!tocWrap.classList.contains("is-open"));
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!tocWrap.contains(e.target)) {
+        closeImmediately();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeImmediately();
+    });
+
+    tocWrap.dataset.tocInit = "1";
+  }
+
+  const usedIds = new Set();
+
+  const getUniqueId = (header, index) => {
+    const existingId = (header.id || "").trim();
+    const rawText = (header.textContent || "").trim().toLowerCase();
+    const slug = rawText
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "");
+    const base = existingId || slug || `section-${index + 1}`;
+
+    let candidate = base;
+    let suffix = 2;
+    while (
+      usedIds.has(candidate) ||
+      (document.getElementById(candidate) &&
+        document.getElementById(candidate) !== header)
+    ) {
+      candidate = `${base}-${suffix}`;
+      suffix += 1;
+    }
+
+    usedIds.add(candidate);
+    return candidate;
+  };
+
+  headers.forEach((header, index) => {
+    header.id = getUniqueId(header, index);
+    header.style.scrollMarginTop = "7.5rem";
+    const mappedLineIdx =
+      headers.length <= 1
+        ? 0
+        : Math.round((index / (headers.length - 1)) * (railLineCount - 1));
+    headerLineIndex.set(header.id, mappedLineIdx);
+
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = `#${header.id}`;
+    a.textContent = header.textContent;
+    a.className = `floating-toc-link floating-toc-${header.tagName.toLowerCase()}`;
+
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.getElementById(header.id).scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      history.replaceState(null, "", `#${header.id}`);
+      setTOCOpen(false);
+    });
+
+    li.appendChild(a);
+    tocList.appendChild(li);
+  });
+
+  if (window._floatingTocObserver) {
+    window._floatingTocObserver.disconnect();
+  }
+
+  const tocLinks = tocList.querySelectorAll(".floating-toc-link");
+  const setActiveLink = (id) => {
+    tocLinks.forEach((link) => {
+      link.classList.toggle("active", link.getAttribute("href") === `#${id}`);
+    });
+    const activeLineIdx = headerLineIndex.get(id);
+    if (typeof activeLineIdx === "number") {
+      setActiveRailLine(activeLineIdx);
+    }
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const visibleEntries = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+      if (!visibleEntries.length) return;
+      setActiveLink(visibleEntries[0].target.id);
+    },
+    { rootMargin: "-18% 0px -68% 0px", threshold: [0, 1] },
+  );
+
+  headers.forEach((header) => observer.observe(header));
+  window._floatingTocObserver = observer;
+
+  if (window.location.hash) {
+    const hashId = decodeURIComponent(window.location.hash.slice(1));
+    if (hashId) setActiveLink(hashId);
+  }
+}
+function initReadingProgress() {
+  const progressBar = document.getElementById("reading-progress");
+  if (!progressBar) return;
+
+  const updateProgress = () => {
+    const scrollY = Math.max(0, window.scrollY || window.pageYOffset || 0);
+    const relatedSection = document.getElementById("related-reading");
+    let totalHeight;
+
+    if (
+      relatedSection &&
+      relatedSection.offsetParent !== null &&
+      relatedSection.offsetTop > 0
+    ) {
+      totalHeight = relatedSection.offsetTop - window.innerHeight;
+    } else {
+      totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    }
+
+    if (totalHeight <= 0 || scrollY <= 2) {
+      progressBar.style.width = "0%";
+      return;
+    }
+
+    const progress = Math.min(Math.max((scrollY / totalHeight) * 100, 0), 100);
+    progressBar.style.width = progress < 0.8 ? "0%" : `${progress}%`;
+  };
+
+  window.addEventListener("scroll", updateProgress, { passive: true });
+  updateProgress();
+}
+
+function initNewsletter() {
+  const forms = [
+    document.getElementById("newsletter-form"),
+    document.getElementById("newsletter-slidein-form"),
+  ];
+
+  forms.forEach((form) => {
+    if (!form) return;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector("button[type='submit']");
+      const input = form.querySelector("input[type='email']");
+      const originalText = btn ? btn.innerHTML : "Subscribe";
+
+      if (!input.value) return;
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>...`;
+      }
+
+      try {
+        if (!window.supabaseClient)
+          throw new Error("Supabase client not initialized");
+
+        const { error } = await window.supabaseClient
+          .from("subscribers")
+          .insert([
+            {
+              email: input.value,
+              tracking_id: localStorage.getItem("tracking_id"),
+            },
+          ]);
+
+        if (error) {
+          if (error.code === "23505") {
+            alert("You are already subscribed!");
+          } else {
+            throw error;
+          }
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+          }
+        } else {
+          if (form.id === "newsletter-slidein-form") {
+            form.innerHTML = `
+              <div style="text-align: center; color: #16a34a; font-weight: 600; padding: 0.5rem;">
+                <i data-lucide="check" style="vertical-align: middle; margin-right: 4px;"></i> Subscribed!
+              </div>
+             `;
+            lucide.createIcons();
+
+            localStorage.setItem("newsletter_interacted", "subscribed");
+            setTimeout(() => {
+              const slidein = document.getElementById("newsletter-slidein");
+              if (slidein) slidein.classList.remove("active");
+            }, 2000);
+          } else {
+            localStorage.setItem("newsletter_interacted", "subscribed");
+            const parent = form.parentElement;
+            parent.innerHTML = `
+              <div style="text-align: center; padding: 1rem; color: #16a34a; background: #dcfce7; border-radius: 8px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                  <strong>Subscribed!</strong>
+                </div>
+                <p style="margin: 0; font-size: 0.9rem;">Check your inbox soon.</p>
+              </div>
+            `;
+          }
+        }
+      } catch (err) {
+        // console.error("Newsletter error:", err);
+        alert("Something went wrong. Please try again.");
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+        }
+      }
+    });
+  });
+}
+
+function initContactForm() {
+  const forms = document.querySelectorAll(
+    'form[action="https://api.web3forms.com/submit"]',
+  );
+
+  forms.forEach((form) => {
+    const btn = form.querySelector('button[type="submit"]');
+    const originalBtnText = btn ? btn.innerHTML : "Send Message";
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const dataObj = Object.fromEntries(formData.entries());
+
+      // Basic global validation
+      let status = form.parentElement.querySelector(".contact-status-message");
+      if (!status) {
+        status = document.createElement("div");
+        status.className = "contact-status-message";
+        form.appendChild(status);
+      }
+
+      let isValid = true;
+      let errorMessage = "";
+
+      if (dataObj.email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(dataObj.email)) {
+          isValid = false;
+          errorMessage = "Please enter a valid email address.";
+        }
+      }
+
+      if (isValid && dataObj.message) {
+        if (dataObj.message.trim().length < 10) {
+          isValid = false;
+          errorMessage = "Message is too short. Please provide more details.";
+        }
+      }
+
+      if (!isValid && errorMessage) {
+        form.classList.add("form-shake");
+        setTimeout(() => form.classList.remove("form-shake"), 400);
+        status.className = "contact-status-message visible error";
+        status.innerText = errorMessage;
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span> Sending...';
+      }
+
+      status.className = "contact-status-message";
+
+      try {
+        const web3Promise = fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: formData,
+          headers: {
+            Accept: "application/json", // THIS FIXES THE 400 BAD REQUEST
+          },
+        });
+
+        let supabasePromise = Promise.resolve();
+        if (window.supabaseClient) {
+          supabasePromise = window.supabaseClient.from("messages").insert([
+            {
+              name: dataObj.name || "Unknown",
+              email: dataObj.email || "Unknown",
+              subject: dataObj.subject || "Contact Form Submission",
+              message: dataObj.message || "No Message",
+              tracking_id: localStorage.getItem("tracking_id"),
+            },
+          ]);
+        }
+
+        const [response] = await Promise.all([web3Promise, supabasePromise]);
+
+        if (response.ok) {
+          const card =
+            form.closest(".contact-form-card, .contact-right") ||
+            form.parentElement;
+          if (card && !form.id.includes("newsletter")) {
+            card.innerHTML = `
+              <div class="contact-success">
+                <div class="contact-success-icon">
+                  <i data-lucide="check" size="32"></i>
+                </div>
+                <h3>Message Sent!</h3>
+                <p>Thanks for reaching out. I'll get back to you shortly.</p>
+                <button class="btn btn-outline contact-success-btn" onclick="location.reload()">Send Another</button>
+              </div>
+            `;
+            if (typeof lucide !== "undefined") lucide.createIcons();
+          } else {
+            status.className = "contact-status-message visible success";
+            status.innerText = "Sent successfully!";
+            form.reset();
+            if (btn) {
+              btn.disabled = false;
+              btn.innerHTML = originalBtnText;
+            }
+          }
+        } else {
+          const errData = await response.json();
+          throw new Error(errData.message || "Form submission failed");
+        }
+      } catch (error) {
+        status.className = "contact-status-message visible error";
+        status.innerText = error.message.includes("failed")
+          ? "Something went wrong. Please try again later."
+          : error.message;
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalBtnText;
+        }
+      }
+    });
+  });
+}
+
+async function loadComments(postId, retries = 0) {
+  const list = document.getElementById("comments-list");
+  if (!list) return;
+
+  if (!window.supabaseClient) {
+    if (retries < 10) {
+      setTimeout(() => loadComments(postId, retries + 1), 300);
+    } else {
+      list.innerHTML =
+        '<p style="color: var(--text-muted);">Could not load comments.</p>';
+    }
+    return;
+  }
+
+  const { data: comments, error } = await window.supabaseClient
+    .from("comments")
+    .select("*")
+    .eq("post_id", postId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    list.innerHTML = "<p>Could not load comments.</p>";
+    return;
+  }
+
+  if (!comments || comments.length === 0) {
+    list.innerHTML =
+      '<p style="color: var(--text-muted); font-style: italic;">No comments yet. Be the first to say something!</p>';
+    return;
+  }
+
+  const renderCommentCard = (c) => {
+    const isAuthor =
+      c.user_name === "Khushaank Gupta" || c.user_name === "Khushaank";
+    const authorClass = isAuthor ? " author-comment" : "";
+    const badge = isAuthor ? '<span class="author-badge">Author</span>' : "";
+    const dateStr = new Date(c.created_at).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    const imageHtml = c.image_url
+      ? `<img src="${c.image_url}" class="comment-card-image" alt="Comment Image" loading="lazy">`
+      : "";
+
+    return `
+      <div class="comment-card${authorClass}">
+        <div class="comment-header">
+          <span class="comment-author">${c.user_name}${badge}</span>
+          <span class="comment-date">${dateStr}</span>
+        </div>
+        <div class="comment-body">${c.content}</div>
+        ${imageHtml}
+      </div>
+    `;
+  };
+
+  const firstCommentHtml = renderCommentCard(comments[0]);
+  const remainingComments = comments.slice(1);
+
+  if (remainingComments.length === 0) {
+    list.innerHTML = firstCommentHtml;
+    return;
+  }
+
+  list.innerHTML = `
+    <div class="comments-preview-first">${firstCommentHtml}</div>
+    <div id="comments-rest" class="comments-rest" hidden>
+      ${remainingComments.map(renderCommentCard).join("")}
+    </div>
+    <button id="comments-expand-btn" class="comments-expand-btn" type="button" aria-expanded="false" aria-controls="comments-rest">
+      <span class="comments-expand-label">Show ${remainingComments.length} more</span>
+      <span class="comments-expand-arrow" aria-hidden="true">\u25be</span>
+    </button>
+  `;
+
+  const expandBtn = document.getElementById("comments-expand-btn");
+  const rest = document.getElementById("comments-rest");
+
+  if (expandBtn && rest) {
+    expandBtn.addEventListener("click", () => {
+      const isOpen = expandBtn.classList.toggle("is-open");
+      rest.hidden = !isOpen;
+      expandBtn.setAttribute("aria-expanded", String(isOpen));
+
+      const label = expandBtn.querySelector(".comments-expand-label");
+      if (label) {
+        label.textContent = isOpen
+          ? "Hide comments"
+          : `Show ${remainingComments.length} more`;
+      }
+    });
+  }
+}
+async function checkAuth(retries = 0) {
+  if (!window.supabaseClient) {
+    if (retries < 10) {
+      setTimeout(() => checkAuth(retries + 1), 300);
+    } else {
+      const loginSection = document.getElementById("auth-comment");
+      if (loginSection) loginSection.style.display = "block";
+      // console.warn("Supabase client not available after retries");
+    }
+    return;
+  }
+
+  const updateUI = (session) => {
+    const loginSection = document.getElementById("auth-comment");
+    const formSection = document.getElementById("comment-form");
+    const userDisplay = document.getElementById("user-display-name");
+
+    if (session && session.user) {
+      if (loginSection) loginSection.style.display = "none";
+      if (formSection) formSection.style.display = "block";
+      if (userDisplay) {
+        let name = session.user.email;
+        if (
+          session.user.user_metadata &&
+          session.user.user_metadata.full_name
+        ) {
+          name = session.user.user_metadata.full_name;
+        }
+        userDisplay.textContent = `Posting as ${name}`;
+      }
+    } else {
+      if (loginSection) loginSection.style.display = "block";
+      if (formSection) formSection.style.display = "none";
+    }
+  };
+
+  try {
+    const {
+      data: { session },
+    } = await window.supabaseClient.auth.getSession();
+
+    updateUI(session);
+
+    window.supabaseClient.auth.onAuthStateChange((event, session) => {
+      updateUI(session);
+    });
+  } catch (err) {
+    // console.error("checkAuth error:", err);
+
+    const loginSection = document.getElementById("auth-comment");
+    if (loginSection) loginSection.style.display = "block";
+  }
+}
+
+async function handleCommentSubmit(e) {
+  e.preventDefault();
+  const contentInput = document.getElementById("comment-content");
+  const fileInput = document.getElementById("comment-image-upload");
+  const btn = e.target.querySelector("button[type='submit']");
+
+  if (!currentPostId) {
+    alert("Article not loaded fully yet.");
+    return;
+  }
+
+  const {
+    data: { user },
+  } = await window.supabaseClient.auth.getUser();
+  if (!user) {
+    alert("You must be logged in to comment.");
+    return;
+  }
+
+  const userName = user.user_metadata.full_name || user.email.split("@")[0];
+  const originalText = btn.textContent;
+  btn.textContent = "Posting...";
+  btn.disabled = true;
+
+  let imageUrl = null;
+  const file = fileInput && fileInput.files && fileInput.files[0];
+
+  if (file) {
+    try {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `comments/${fileName}`;
+
+      const { error: uploadError, data } = await window.supabaseClient.storage
+        .from("assets")
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: publicUrlData } = window.supabaseClient.storage
+        .from("assets")
+        .getPublicUrl(filePath);
+
+      imageUrl = publicUrlData.publicUrl;
+    } catch (uploadError) {
+      alert("Error uploading image: " + uploadError.message);
+      btn.textContent = originalText;
+      btn.disabled = false;
+      return;
+    }
+  }
+
+  const { error } = await window.supabaseClient.from("comments").insert([
+    {
+      post_id: currentPostId,
+      user_name: userName,
+      content: contentInput.value,
+      image_url: imageUrl,
+      tracking_id: localStorage.getItem("tracking_id"),
+    },
+  ]);
+
+  if (error) {
+    alert("Error posting comment: " + error.message);
+  } else {
+    contentInput.value = "";
+    if (fileInput) {
+      fileInput.value = "";
+    }
+    const previewContainer = document.getElementById("comment-image-preview");
+    const previewImg = document.getElementById("preview-img");
+    if (previewContainer && previewImg) {
+      previewImg.src = "";
+      previewContainer.style.display = "none";
+    }
+    loadComments(currentPostId);
+  }
+
+  btn.textContent = originalText;
+  btn.disabled = false;
+}
+
+function setupCommentImageUploader() {
+  const addBtn = document.getElementById("add-image-btn");
+  const fileInput = document.getElementById("comment-image-upload");
+  const previewContainer = document.getElementById("comment-image-preview");
+  const previewImg = document.getElementById("preview-img");
+  const removeBtn = document.getElementById("remove-image-btn");
+  const popover = document.getElementById("attach-popover");
+  const dropZone = document.getElementById("attach-drop-zone");
+  const fromComputerBtn = document.getElementById("attach-from-computer");
+  const MAX_COMMENT_IMAGE_BYTES = 10 * 1024 * 1024;
+
+  if (!addBtn || !fileInput) return;
+
+  function handleFile(file) {
+    if (!file || !file.type.startsWith("image/")) return;
+    if (file.size > MAX_COMMENT_IMAGE_BYTES) {
+      alert("Selected image is larger than 10 MB. Please choose a smaller file.");
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    if (previewImg) previewImg.src = url;
+    if (previewContainer) previewContainer.style.display = "inline-block";
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    fileInput.files = dt.files;
+    if (popover) popover.classList.remove("active");
+  }
+
+  addBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (popover) popover.classList.toggle("active");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (
+      popover &&
+      !popover.contains(e.target) &&
+      e.target !== addBtn &&
+      !addBtn.contains(e.target)
+    ) {
+      popover.classList.remove("active");
+    }
+  });
+
+  if (fromComputerBtn) {
+    fromComputerBtn.addEventListener("click", () => {
+      fileInput.click();
+    });
+  }
+
+  fileInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      handleFile(file);
+    } else if (previewContainer) {
+      previewContainer.style.display = "none";
+    }
+  });
+
+  if (dropZone) {
+    ["dragenter", "dragover"].forEach((evt) => {
+      dropZone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.add("drag-over");
+      });
+    });
+    ["dragleave", "drop"].forEach((evt) => {
+      dropZone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove("drag-over");
+      });
+    });
+    dropZone.addEventListener("drop", (e) => {
+      const file = e.dataTransfer.files[0];
+      if (file) handleFile(file);
+    });
+  }
+
+  if (removeBtn) {
+    removeBtn.addEventListener("click", () => {
+      if (previewImg) previewImg.src = "";
+      if (previewContainer) previewContainer.style.display = "none";
+      fileInput.value = "";
+    });
+  }
+}
+
+async function initArticleNavigation(currentPost) {
+  if (!window.supabaseClient) return;
+
+  const { data: posts, error } = await window.supabaseClient
+    .from("posts")
+    .select("slug, id, title")
+    .order("created_at", { ascending: false });
+
+  if (error || !posts) return;
+
+  const currentIndex = posts.findIndex((p) => p.id === currentPost.id);
+  const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
+  const nextPost =
+    currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null;
+
+  document.addEventListener("keydown", (e) => {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+
+    if (e.ctrlKey || e.metaKey) {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        if (nextPost) {
+          window.location.href = buildPulseUrl(nextPost.slug || nextPost.id);
+        } else {
+          // console.log("Already at the latest article.");
+        }
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        if (prevPost) {
+          window.location.href = buildPulseUrl(prevPost.slug || prevPost.id);
+        } else {
+          // console.log("Already at the first article.");
+        }
+      }
+    }
+  });
+}
+
+function initImageLightbox() {
+  const articleBody = document.getElementById("article-body");
+  if (!articleBody) return;
+
+  let lightbox = document.querySelector(".article-lightbox");
+  if (!lightbox) {
+    lightbox = document.createElement("div");
+    lightbox.className = "article-lightbox";
+    lightbox.innerHTML = `<img src="" alt="Lightbox">`;
+    document.body.appendChild(lightbox);
+  }
+
+  const lightboxImg = lightbox.querySelector("img");
+
+  function openLightbox(src) {
+    lightboxImg.src = src;
+    lightbox.classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove("active");
+    document.body.style.overflow = "";
+    setTimeout(() => {
+      lightboxImg.src = "";
+    }, 300);
+  }
+
+  articleBody.addEventListener("click", (e) => {
+    if (e.target.tagName === "IMG") {
+      openLightbox(e.target.src);
+    }
+  });
+
+  lightbox.addEventListener("click", closeLightbox);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && lightbox.classList.contains("active")) {
+      closeLightbox();
+    }
+  });
+}
+
+async function loadRelatedPosts(currentPost) {
+  if (!window.supabaseClient) return;
+
+  const section = document.getElementById("related-reading");
+  const grid = document.getElementById("related-posts-grid");
+  if (!section || !grid) return;
+
+  let { data: related, error } = await window.supabaseClient
+    .from("posts")
+    .select("*")
+    .eq("category", currentPost.category)
+    .neq("id", currentPost.id)
+    .order("created_at", { ascending: false })
+    .limit(3);
+
+  if (error || !related || related.length === 0) {
+    const { data: fallback } = await window.supabaseClient
+      .from("posts")
+      .select("*")
+      .neq("id", currentPost.id)
+      .order("created_at", { ascending: false })
+      .limit(3);
+    related = fallback || [];
+  }
+
+  if (related.length > 0) {
+    section.style.display = "block";
+    grid.innerHTML = related
+      .map(
+        (post) => `
+        <a href="${buildPulseUrl(post.slug || post.id, generateTrackingId())}" class="post-card fade-in">
+          <div class="post-image" style="background: ${
+            post.image_url
+              ? `url('${post.image_url}')`
+              : "linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%)"
+          }; background-size: cover; background-position: center;"></div>
+          <div class="post-content">
+            <span class="post-date">${new Date(post.created_at).toLocaleDateString()}</span>
+            <h3 class="post-title" style="font-size: 1.1rem;">${post.title}</h3>
+            <p class="post-excerpt" style="font-size: 0.9rem; -webkit-line-clamp: 2;">${post.excerpt || ""}</p>
+            <span class="read-more">Read Article <i data-lucide="arrow-right" size="16"></i></span>
+          </div>
+        </a>
+      `,
+      )
+      .join("");
+
+    if (typeof lucide !== "undefined") lucide.createIcons();
+
+    grid.querySelectorAll(".fade-in").forEach((el) => {
+      if (typeof observer !== "undefined") observer.observe(el);
+      else el.classList.add("visible");
+    });
+  }
+}
+
+function initFocusMode() {
+  let indicator = document.querySelector(".focus-mode-indicator");
+  if (!indicator) {
+    indicator = document.createElement("div");
+    indicator.className = "focus-mode-indicator";
+    document.body.appendChild(indicator);
+  }
+  indicator.textContent = "Focus Mode Active - Alt + F to exit";
+
+  function toggleFocusMode() {
+    const isActive = document.body.classList.toggle("focus-mode");
+    if (isActive) {
+      indicator.textContent = "Focus Mode Active - Alt + F to exit";
+    }
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.altKey && e.key.toLowerCase() === "f") {
+      if (
+        document.activeElement.tagName === "INPUT" ||
+        document.activeElement.tagName === "TEXTAREA"
+      )
+        return;
+
+      e.preventDefault();
+      toggleFocusMode();
+    }
+
+    if (e.key === "Escape" && document.body.classList.contains("focus-mode")) {
+      document.body.classList.remove("focus-mode");
+    }
+  });
+}
+
+function initLinkPreview() {
+  const mainContent = document.querySelector("main");
+  if (!mainContent) return;
+
+  let previewCard = document.querySelector(".link-preview-card");
+  if (!previewCard) {
+    previewCard = document.createElement("div");
+    previewCard.className = "link-preview-card";
+    document.body.appendChild(previewCard);
+  }
+
+  const cache = new Map();
+  let showTimeout;
+  let hideTimeout;
+  const previewDelayMs = 4000;
+
+  const showPreview = async (link, identifier, type) => {
+    clearTimeout(hideTimeout);
+    const rect = link.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    previewCard.style.left = `${rect.left + window.scrollX}px`;
+    previewCard.style.top = `${rect.top + scrollTop - 10}px`;
+    previewCard.innerHTML = `
+      <div class="preview-card-loader">
+        <div class="preview-loader-pulse"></div>
+        <div style="font-size: 0.75rem; color: var(--text-muted)">Loading preview...</div>
+      </div>
+    `;
+    previewCard.classList.add("active");
+
+    const cardRect = previewCard.getBoundingClientRect();
+    let top = rect.top + scrollTop - cardRect.height - 15;
+    if (top < scrollTop + 10) {
+      top = rect.bottom + scrollTop + 15;
+    }
+    previewCard.style.top = `${top}px`;
+
+    if (type === "internal") {
+      let postData = cache.get(identifier);
+      if (!postData) {
+        const { data, error } = await window.supabaseClient
+          .from("posts")
+          .select("title, excerpt, image_url")
+          .eq("slug", identifier)
+          .maybeSingle();
+
+        if (!error && data) {
+          postData = data;
+          cache.set(identifier, data);
+        } else {
+          const { data: idData } = await window.supabaseClient
+            .from("posts")
+            .select("title, excerpt, image_url")
+            .eq("id", identifier)
+            .maybeSingle();
+          postData = idData;
+          if (idData) cache.set(identifier, idData);
+        }
+      }
+
+      if (postData) {
+        previewCard.innerHTML = `
+            ${
+              postData.image_url
+                ? `<div class="preview-card-image" style="background-image: url('${postData.image_url}')"></div>`
+                : '<div class="preview-card-image" style="background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%)"></div>'
+            }
+            <div class="preview-card-content">
+            <div class="preview-card-title">${postData.title}</div>
+            <div class="preview-card-excerpt">${postData.excerpt || "No summary available."}</div>
+            </div>
+        `;
+      } else {
+        previewCard.classList.remove("active");
+      }
+    } else {
+      try {
+        const urlObj = new URL(identifier);
+        const domain = urlObj.hostname;
+        const favicon = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+
+        previewCard.innerHTML = `
+                <div class="preview-card-content" style="padding: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                        <img src="${favicon}" alt="Favicon" style="width: 24px; height: 24px; border-radius: 4px;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">${domain}</span>
+                    </div>
+                    <div class="preview-card-title" style="font-size: 0.95rem; margin-bottom: 0.25rem; word-break: break-all;">${identifier}</div>
+                    <div class="preview-card-excerpt">Click to visit external site <i data-lucide="external-link" size="12" style="display: inline; vertical-align: middle;"></i></div>
+                </div>
+            `;
+        lucide.createIcons();
+      } catch (e) {
+        previewCard.classList.remove("active");
+      }
+    }
+  };
+
+  const hidePreview = () => {
+    clearTimeout(showTimeout);
+    hideTimeout = setTimeout(() => {
+      previewCard.classList.remove("active");
+    }, 300);
+  };
+
+  const links = mainContent.querySelectorAll("a");
+  links.forEach((link) => {
+    const href = link.getAttribute("href");
+    if (
+      !href ||
+      href.startsWith("#") ||
+      link.closest(".nav-links") ||
+      link.closest(".footer-links")
+    )
+      return;
+
+    try {
+      const url = new URL(href, window.location.origin);
+
+      if (
+        url.origin === window.location.origin &&
+        (href.includes("/pulse/") || href.match(/\/pulse\/[^\/]+$/))
+      ) {
+        let slug = null;
+        if (href.includes("slug=")) {
+          const params = new URLSearchParams(url.search);
+          slug = params.get("slug");
+        } else {
+          const parts = url.pathname.split("/");
+          if (parts.length >= 3 && parts[1] === "pulse") {
+            slug = parts[2];
+          }
+        }
+
+        if (slug) {
+          link.addEventListener("mouseenter", () => {
+            clearTimeout(hideTimeout);
+            showTimeout = setTimeout(
+              () => showPreview(link, slug, "internal"),
+              previewDelayMs,
+            );
+          });
+          link.addEventListener("mouseleave", hidePreview);
+        }
+      } else if (
+        url.protocol.startsWith("http") &&
+        url.origin !== window.location.origin
+      ) {
+        link.addEventListener("mouseenter", () => {
+          clearTimeout(hideTimeout);
+          showTimeout = setTimeout(
+            () => showPreview(link, href, "external"),
+            previewDelayMs,
+          );
+        });
+        link.addEventListener("mouseleave", hidePreview);
+      }
+    } catch (e) {}
+  });
+
+  previewCard.addEventListener("mouseenter", () => clearTimeout(hideTimeout));
+  previewCard.addEventListener("mouseleave", hidePreview);
+}
+
+function initAICardEffects() {
+  const cards = document.querySelectorAll(".ai-card");
+  cards.forEach((card) => {
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      card.style.setProperty("--mouse-x", `${x}px`);
+      card.style.setProperty("--mouse-y", `${y}px`);
+    });
+  });
+}
+
+const navScript = document.createElement("script");
+navScript.src = "/assets/js/nav-algorithm.js";
+document.body.appendChild(navScript);
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.querySelector(".ai-card")) {
+    initAICardEffects();
+  }
+
+  const yearSpan = document.getElementById("current-year");
+  if (yearSpan) {
+    yearSpan.textContent = new Date().getFullYear();
+  }
+});
+
+async function trackPageView() {
+  if (!window.supabaseClient) return;
+
+  if (
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+  )
+    return;
+
+  let trackingId = localStorage.getItem("tracking_id");
+  if (!trackingId) {
+    trackingId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      },
+    );
+    localStorage.setItem("tracking_id", trackingId);
+  }
+
+  const payload = {
+    page_path: window.location.pathname + window.location.search,
+    referrer: document.referrer || "Direct",
+    user_agent: navigator.userAgent,
+    tracking_id: trackingId,
+  };
+
+  try {
+    const {
+      data: { session },
+    } = await window.supabaseClient.auth.getSession();
+    if (session && session.user) {
+      payload.user_email = session.user.email;
+    }
+
+    await window.supabaseClient.from("page_views").insert([payload]);
+  } catch (err) {}
+}
+
+function openSearch() {
+  const overlay = document.querySelector(".search-overlay");
+  if (overlay) {
+    overlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+    const input = overlay.querySelector(".search-input");
+    if (input) setTimeout(() => input.focus(), 50);
+  }
+}
+
+function closeSearch() {
+  const overlay = document.querySelector(".search-overlay");
+  if (overlay) {
+    overlay.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+}
+
+function performSearch(query) {
+  if (!query) return;
+
+  window.location.href = `/blog?q=${encodeURIComponent(query)}`;
+}
+
+window.openSearch = openSearch;
+window.closeSearch = closeSearch;
+window.performSearch = performSearch;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const closeBtn = document.querySelector(".close-search");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeSearch);
+  }
+
+  document.addEventListener("keydown", (e) => {
+    // Escape to close all dialogues
+    if (e.key === "Escape") {
+      closeSearch();
+      const shareModal = document.getElementById("yt-share-modal");
+      if (shareModal && shareModal.classList.contains("active")) {
+        shareModal.classList.remove("active");
+      }
+      const loginModal = document.getElementById("login-modal");
+      if (loginModal && loginModal.classList.contains("active")) {
+        loginModal.classList.remove("active");
+      }
+      const shortcutsModal = document.getElementById("shortcuts-modal-overlay");
+      if (shortcutsModal && shortcutsModal.classList.contains("active")) {
+        shortcutsModal.classList.remove("active");
+      }
+      const communityPopup = document.querySelector(".community-popup");
+      if (communityPopup && communityPopup.classList.contains("visible")) {
+        communityPopup.classList.remove("visible");
+        setTimeout(() => communityPopup.remove(), 400);
+      }
+    }
+
+    // Ctrl + ? or Ctrl + / for Help Modal
+    if (e.ctrlKey && (e.key === "?" || e.key === "/")) {
+      e.preventDefault();
+      toggleShortcutsModal();
+    }
+
+    // Ctrl + K for Search
+    if (e.ctrlKey && e.key === "k") {
+      e.preventDefault();
+      const searchOverlay = document.querySelector(".search-overlay");
+      if (searchOverlay) {
+        if (searchOverlay.classList.contains("active")) {
+          closeSearch();
+        } else {
+          openSearch();
+        }
+      }
+    }
+  });
+});
+
+function toggleShortcutsModal() {
+  let modal = document.getElementById("shortcuts-modal-overlay");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "shortcuts-modal-overlay";
+    modal.className = "shortcuts-modal-overlay";
+    modal.innerHTML = `
+      <div class="shortcuts-modal">
+        <div class="shortcuts-modal-header">
+          <h3>Keyboard Shortcuts</h3>
+          <button class="btn-close-modal" id="close-shortcuts-modal">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="shortcuts-list">
+          <div class="shortcut-item"><span>Search</span><div class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>K</kbd></div></div>
+          <div class="shortcut-item"><span>Help Modal</span><div class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>/</kbd></div></div>
+          <div class="shortcut-item"><span>Close Modals</span><div class="shortcut-keys"><kbd>Esc</kbd></div></div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    if (typeof lucide !== "undefined") lucide.createIcons();
+
+    document
+      .getElementById("close-shortcuts-modal")
+      .addEventListener("click", () => {
+        modal.classList.remove("active");
+      });
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.classList.remove("active");
+    });
+  }
+
+  if (modal.classList.contains("active")) {
+    modal.classList.remove("active");
+  } else {
+    modal.classList.add("active");
+  }
+}
+
+function initScrollTopButton() {
+  const scrollBtn = document.getElementById("scroll-top-btn");
+  if (!scrollBtn) return;
+
+  if (!window._scrollTopListenerAdded) {
+    window.addEventListener(
+      "scroll",
+      () => {
+        const btn = document.getElementById("scroll-top-btn");
+        if (!btn) return;
+        if (window.scrollY > 400) {
+          btn.classList.add("visible");
+        } else {
+          btn.classList.remove("visible");
+        }
+
+        const footer = document.querySelector("footer");
+        if (footer) {
+          const footerTop = footer.getBoundingClientRect().top;
+          const windowHeight = window.innerHeight;
+          if (footerTop < windowHeight) {
+            btn.classList.add("near-footer");
+          } else {
+            btn.classList.remove("near-footer");
+          }
+        }
+      },
+      { passive: true },
+    );
+    window._scrollTopListenerAdded = true;
+  }
+
+  scrollBtn.onclick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+}
+
+function updateCopyrightYear() {
+  const el = document.getElementById("current-year");
+  if (el) el.textContent = new Date().getFullYear();
+}
+
+function initFAQToggle() {
+  const faqItems = document.querySelectorAll(".faq-item");
+  faqItems.forEach((item) => {
+    const header = item.querySelector(".ai-list-title");
+    if (header) {
+      header.replaceWith(header.cloneNode(true));
+      const newHeader = item.querySelector(".ai-list-title");
+      newHeader.addEventListener("click", () => {
+        const wasActive = item.classList.contains("active");
+        faqItems.forEach((other) => other.classList.remove("active"));
+        if (!wasActive) item.classList.add("active");
+      });
+    }
+  });
+}

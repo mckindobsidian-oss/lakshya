@@ -1,0 +1,60 @@
+# Khushaank Gupta — Portfolio & Blog
+# https://khushaankgupta.qzz.io
+
+# Crawl Delay to prevent server overload
+User-agent: *
+Crawl-delay: 1
+Allow: /
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /rss-generator.html
+Disallow: /pulse/index.html
+Disallow: /maintenance
+Disallow: /maintenance.html
+Disallow: /offline
+Disallow: /offline.html
+Disallow: /login
+Disallow: /login.html
+Disallow: /404.html
+
+# Block common aggressive bots or unwanted crawlers
+User-agent: PetalBot
+Disallow: /
+User-agent: AhrefsBot
+Disallow: /
+User-agent: SemrushBot
+Disallow: /
+User-agent: MJ12bot
+Disallow: /
+User-agent: DotBot
+Disallow: /
+
+# Specifically allow AI and major search bots
+User-agent: Googlebot
+Allow: /
+User-agent: Bingbot
+Allow: /
+User-agent: Slurp
+Allow: /
+User-agent: DuckDuckBot
+Allow: /
+User-agent: Baiduspider
+Allow: /
+User-agent: YandexBot
+Allow: /
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: CCBot
+Allow: /
+
+# Sitemaps
+Sitemap: https://khushaankgupta.qzz.io/sitemap.xml
+
+# RSS Feed
+Allow: /rss.xml
+
+# Host
+Host: https://khushaankgupta.qzz.io
+

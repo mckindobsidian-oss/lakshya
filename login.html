@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login | Khushaank Gupta</title>
+    <link rel="icon" type="image/png" href="/assets/images/favicon.webp" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/admin.css" />
+    <script src="/assets/js/supabase.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f0f2f5;
+        font-family: "Manrope", sans-serif;
+      }
+
+      .login-page {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        width: 100%;
+        padding: 1.5rem;
+      }
+
+      .login-card {
+        width: 100%;
+        max-width: 420px;
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 3rem 2.5rem;
+        box-shadow:
+          0 4px 24px rgba(0, 0, 0, 0.06),
+          0 1px 4px rgba(0, 0, 0, 0.04);
+        animation: cardSlideUp 0.5s ease-out forwards;
+      }
+
+      @keyframes cardSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .login-brand {
+        font-family: "Playfair Display", serif;
+        font-weight: 700;
+        font-size: 2.2rem;
+        text-align: center;
+        margin-bottom: 0.25rem;
+        letter-spacing: -0.04em;
+        color: #111827;
+      }
+
+      .login-subtitle {
+        text-align: center;
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 0.25rem;
+      }
+
+      .login-desc {
+        text-align: center;
+        color: #6b7280;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+      }
+
+      .login-form .form-group {
+        margin-bottom: 1.25rem;
+      }
+
+      .login-form .form-label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.4rem;
+      }
+
+      .login-form .form-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-family: "Manrope", sans-serif;
+        background: #f9fafb;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+        box-sizing: border-box;
+      }
+
+      .login-form .form-input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        background: white;
+      }
+
+      .login-btn {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        background: #0f172a;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: "Manrope", sans-serif;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          transform 0.15s ease;
+        margin-top: 0.5rem;
+      }
+
+      .login-btn:hover {
+        background: #1e293b;
+        transform: translateY(-1px);
+      }
+
+      .login-btn:active {
+        transform: translateY(0);
+      }
+
+      .login-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .login-error {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 1rem;
+        text-align: center;
+        min-height: 1.2rem;
+      }
+
+      .login-footer {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #f3f4f6;
+        font-size: 0.8rem;
+        color: #9ca3af;
+      }
+
+      .password-wrapper {
+        position: relative;
+      }
+
+      .password-wrapper .form-input {
+        padding-right: 3rem;
+      }
+
+      .eye-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        color: #9ca3af;
+        transition: color 0.2s;
+      }
+
+      .eye-toggle:hover {
+        color: #374151;
+      }
+
+      @media (max-width: 480px) {
+        .login-card {
+          padding: 2rem 1.5rem;
+          border-radius: 12px;
+        }
+        .login-brand {
+          font-size: 1.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="toast" class="toast">Action Successful</div>
+
+    <div class="login-page">
+      <div class="login-card">
+        <div class="login-brand">KG.</div>
+        <h2 class="login-subtitle">Welcome Back</h2>
+        <p class="login-desc">Sign in to manage your portfolio.</p>
+
+        <form id="login-form" class="login-form">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input
+              type="email"
+              id="email"
+              class="form-input"
+              required
+              placeholder="admin@example.com"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="password"
+                class="form-input"
+                required
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                class="eye-toggle"
+                id="toggle-password"
+                aria-label="Toggle password visibility"
+              >
+                <svg
+                  id="eye-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg
+                  id="eye-off-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="display: none"
+                >
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+                  ></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="login-btn">Sign In</button>
+        </form>
+        <p id="auth-error" class="login-error"></p>
+
+        <div class="login-footer">
+          &copy; 2026 Khushaank Gupta &middot; Portfolio Admin
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/js/supabase-config.js"></script>
+    <script src="assets/js/login.js"></script>
+    <script>
+      const toggleBtn = document.getElementById("toggle-password");
+      const passwordInput = document.getElementById("password");
+      const eyeIcon = document.getElementById("eye-icon");
+      const eyeOffIcon = document.getElementById("eye-off-icon");
+
+      toggleBtn.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
+        passwordInput.type = isPassword ? "text" : "password";
+        eyeIcon.style.display = isPassword ? "none" : "block";
+        eyeOffIcon.style.display = isPassword ? "block" : "none";
+      });
+    </script>
+  </body>
+</html>

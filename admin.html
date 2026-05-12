@@ -1,0 +1,1044 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio Admin</title>
+    <link rel="icon" type="image/png" href="/assets/images/favicon.webp" />
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+    />
+    <link rel="stylesheet" href="assets/css/admin.css" />
+    <script src="/assets/js/lucide.min.js"></script>
+    <script src="/assets/js/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link
+      href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <style>
+      /* Quill Overrides for Dark/Admin Theme */
+      .ql-toolbar.ql-snow {
+        border-color: var(--border);
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        background: #f8f9fa;
+      }
+      .ql-container.ql-snow {
+        border-color: var(--border);
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        font-family: "Manrope", sans-serif;
+        font-size: 1rem;
+      }
+      .ql-editor {
+        min-height: 200px;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+    </style>
+
+    <meta
+      name="description"
+      content="Khushaank Gupta - AI Engineer & Developer Portfolio"
+    />
+    <meta
+      name="keywords"
+      content="Khushaank Gupta, AI Engineer, Machine Learning, Web Developer, Portfolio"
+    />
+    <meta name="author" content="Khushaank Gupta" />
+    <meta property="og:title" content="Khushaank Gupta Portfolio" />
+    <meta
+      property="og:description"
+      content="Portfolio of Khushaank Gupta, specializing in AI, Development, and Finance."
+    />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <div class="preloader">
+      <div class="loader-bar"></div>
+    </div>
+    <div id="toast" class="toast">Action Successful</div>
+
+    <div id="dashboard-section" class="admin-layout hidden">
+      <div class="mobile-header">
+        <div style="display: flex; align-items: center; gap: 1rem">
+          <i
+            data-lucide="menu"
+            id="mobile-sidebar-toggle"
+            style="cursor: pointer; min-width: 24px"
+          ></i>
+          <span class="sidebar-brand" style="margin-bottom: 0">
+            KG.
+            <span
+              style="
+                font-size: 0.8rem;
+                opacity: 0.5;
+                font-weight: normal;
+                font-family: &quot;Manrope&quot;, sans-serif;
+              "
+              >Admin</span
+            >
+          </span>
+        </div>
+      </div>
+
+      <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+      <aside class="sidebar" id="sidebar">
+        <div
+          class="sidebar-brand"
+          style="display: flex; align-items: center; gap: 0.75rem"
+        >
+          <i
+            data-lucide="menu"
+            id="desktop-sidebar-toggle"
+            style="cursor: pointer; min-width: 24px"
+          ></i>
+          <span class="brand-text"
+            >KG.
+            <span
+              style="
+                font-size: 0.8rem;
+                opacity: 0.5;
+                font-weight: normal;
+                font-family: &quot;Manrope&quot;, sans-serif;
+              "
+              >Admin</span
+            >
+          </span>
+        </div>
+        <nav>
+          <div
+            id="nav-dashboard"
+            class="nav-item active"
+            onclick="switchView('dashboard')"
+          >
+            <i
+              data-lucide="layout-dashboard"
+              size="18"
+              style="min-width: 18px"
+            ></i>
+            <span class="nav-text">Dashboard</span>
+          </div>
+          <div id="nav-blogs" class="nav-item" onclick="switchView('blogs')">
+            <i data-lucide="file-text" size="18" style="min-width: 18px"></i>
+            <span class="nav-text">Blogs</span>
+          </div>
+          <div
+            id="nav-analytics"
+            class="nav-item"
+            onclick="switchView('analytics')"
+          >
+            <i data-lucide="bar-chart-3" size="18" style="min-width: 18px"></i>
+            <span class="nav-text">Analytics</span>
+          </div>
+          <div
+            id="nav-audience"
+            class="nav-item"
+            onclick="switchView('audience')"
+          >
+            <i data-lucide="user-check" size="18" style="min-width: 18px"></i>
+            <span class="nav-text">Audience</span>
+          </div>
+          <div
+            id="nav-subscribers"
+            class="nav-item"
+            onclick="switchView('subscribers')"
+          >
+            <i data-lucide="users" size="18" style="min-width: 18px"></i>
+            <span class="nav-text">Subscribers</span>
+          </div>
+          <div
+            id="nav-messages"
+            class="nav-item"
+            onclick="switchView('messages')"
+          >
+            <i
+              data-lucide="message-square"
+              size="18"
+              style="min-width: 18px"
+            ></i>
+            <span class="nav-text">Messages</span>
+          </div>
+          <div
+            id="nav-comments"
+            class="nav-item"
+            onclick="switchView('comments')"
+          >
+            <i
+              data-lucide="message-circle"
+              size="18"
+              style="min-width: 18px"
+            ></i>
+            <span class="nav-text">Comments</span>
+          </div>
+          <div id="nav-files" class="nav-item" onclick="switchView('files')">
+            <i data-lucide="folder-open" size="18" style="min-width: 18px"></i>
+            <span class="nav-text">Files</span>
+          </div>
+          <div
+            id="nav-settings"
+            class="nav-item"
+            onclick="switchView('settings')"
+          >
+            <i data-lucide="settings" size="18" style="min-width: 18px"></i>
+            <span class="nav-text">Settings</span>
+          </div>
+          <div class="nav-item logout-btn" onclick="signOut()">
+            <i data-lucide="log-out" size="18" style="min-width: 18px"></i>
+            <span class="nav-text">Sign Out</span>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <div id="view-dashboard">
+          <div class="page-header">
+            <div>
+              <h2 class="page-title">Dashboard</h2>
+              <p style="color: var(--text-muted); font-size: 0.9rem">
+                Overview of your site analytics.
+              </p>
+            </div>
+            <div class="date-filter-group">
+              <button class="date-filter-btn active" data-range="today">
+                Today
+              </button>
+              <button class="date-filter-btn" data-range="week">Week</button>
+              <button class="date-filter-btn" data-range="month">Month</button>
+              <button class="date-filter-btn" data-range="year">Year</button>
+              <button class="date-filter-btn" data-range="all">All Time</button>
+            </div>
+          </div>
+
+          <div class="stats-container">
+            <div class="stat-box">
+              <div class="stat-icon"><i data-lucide="eye"></i></div>
+              <div>
+                <div class="stat-value" id="dash-page-views">0</div>
+                <div class="stat-label">Page Views</div>
+              </div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-icon"><i data-lucide="users"></i></div>
+              <div>
+                <div class="stat-value" id="dash-unique-visitors">0</div>
+                <div class="stat-label">Unique Visitors</div>
+              </div>
+            </div>
+            <div class="stat-box">
+              <div
+                class="stat-icon"
+                style="background: rgba(37, 99, 235, 0.1); color: #2563eb"
+              >
+                <i data-lucide="file-text"></i>
+              </div>
+              <div>
+                <div class="stat-value" id="total-posts">0</div>
+                <div class="stat-label">Published Articles</div>
+              </div>
+            </div>
+            <div class="stat-box">
+              <div
+                class="stat-icon"
+                style="background: rgba(16, 185, 129, 0.1); color: #10b981"
+              >
+                <i data-lucide="trending-up"></i>
+              </div>
+              <div>
+                <div class="stat-value" id="dash-avg-daily">0</div>
+                <div class="stat-label">Avg. Daily Views</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card" style="margin-top: 1.5rem; padding: 1.5rem">
+            <h3
+              style="
+                font-size: 1rem;
+                font-weight: 600;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+              "
+            >
+              <i data-lucide="bar-chart-3" size="18"></i> Traffic Overview
+            </h3>
+            <div style="position: relative; width: 100%; height: 280px">
+              <canvas id="dashboardChart"></canvas>
+            </div>
+          </div>
+
+          <div class="split-grid" style="margin-top: 1.5rem">
+            <div class="table-card" style="padding: 1.5rem">
+              <h3
+                style="
+                  font-size: 1rem;
+                  font-weight: 600;
+                  margin-bottom: 1rem;
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <i data-lucide="file-text" size="18"></i> Top Pages
+              </h3>
+              <div
+                id="dash-top-pages"
+                style="font-size: 0.9rem; color: var(--text-muted)"
+              >
+                Loading...
+              </div>
+            </div>
+            <div class="table-card" style="padding: 1.5rem">
+              <h3
+                style="
+                  font-size: 1rem;
+                  font-weight: 600;
+                  margin-bottom: 1rem;
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                "
+              >
+                <i data-lucide="globe" size="18"></i> Top Referrers
+              </h3>
+              <div
+                id="dash-top-referrers"
+                style="font-size: 0.9rem; color: var(--text-muted)"
+              >
+                Loading...
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card" style="margin-top: 1.5rem; padding: 1.5rem">
+            <h3
+              style="
+                font-size: 1rem;
+                font-weight: 600;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+              "
+            >
+              <i data-lucide="calendar" size="18"></i> Daily Breakdown
+            </h3>
+            <div class="table-responsive">
+              <table id="dash-daily-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Views</th>
+                    <th>Unique Visitors</th>
+                  </tr>
+                </thead>
+                <tbody id="dash-daily-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="view-blogs" class="hidden">
+          <div class="page-header">
+            <div>
+              <h2 class="page-title">Articles & Blogs</h2>
+              <p style="color: var(--text-muted); font-size: 0.9rem">
+                Manage your blog posts and insights.
+              </p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center">
+              <div class="input-group" style="margin-bottom: 0">
+                <input
+                  type="text"
+                  id="search-input"
+                  placeholder="Search articles..."
+                  class="form-input"
+                  style="padding: 0.5rem 1rem; font-size: 0.9rem; width: 250px"
+                />
+              </div>
+              <button class="icon-btn" onclick="openModal()" title="Create New">
+                <i data-lucide="plus-circle" size="24"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-responsive">
+              <table id="posts-table">
+                <thead>
+                  <tr>
+                    <th width="40%">Title</th>
+                    <th>Date</th>
+                    <th>Views</th>
+                    <th style="text-align: right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="posts-body"></tbody>
+              </table>
+            </div>
+            <div
+              id="empty-state"
+              style="
+                padding: 3rem;
+                text-align: center;
+                color: var(--text-muted);
+                display: none;
+              "
+            >
+              No articles found. Create your first one!
+            </div>
+          </div>
+        </div>
+
+        <div id="view-analytics" class="hidden">
+          <div class="page-header">
+            <div>
+              <h2 class="page-title">Live Tracking</h2>
+              <p style="color: var(--text-muted); font-size: 0.9rem">
+                Real-time insights from your visitors.
+              </p>
+            </div>
+            <button class="icon-btn" onclick="fetchAnalytics()" title="Refresh">
+              <i data-lucide="refresh-cw" size="20"></i>
+            </button>
+          </div>
+
+          <div id="analytics-dashboard">
+            <div
+              style="
+                text-align: center;
+                padding: 4rem;
+                color: var(--text-muted);
+              "
+            >
+              <i data-lucide="loader-2" class="animate-spin" size="32"></i>
+              <p style="margin-top: 1rem">Loading analytics...</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="view-subscribers" class="hidden">
+          <div class="page-header">
+            <div>
+              <h2 class="page-title">Subscribers</h2>
+              <p style="color: var(--text-muted); font-size: 0.9rem">
+                Manage your newsletter audience.
+              </p>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center">
+              <div class="input-group" style="margin-bottom: 0">
+                <input
+                  type="text"
+                  id="search-subscribers"
+                  placeholder="Search email..."
+                  class="form-input"
+                  style="padding: 0.5rem 1rem; font-size: 0.85rem; width: 180px"
+                  onkeyup="filterSubscribers()"
+                />
+              </div>
+              <button
+                class="icon-btn"
+                onclick="fetchSubscribers()"
+                title="Refresh"
+              >
+                <i data-lucide="refresh-cw" size="20"></i>
+              </button>
+              <button
+                class="icon-btn"
+                onclick="exportSubscribers()"
+                title="Export CSV"
+              >
+                <i data-lucide="download" size="20"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="stats-container" style="margin-bottom: 2rem">
+            <div class="stat-box">
+              <div class="stat-icon"><i data-lucide="mail"></i></div>
+              <div>
+                <div class="stat-value" id="total-subscribers">0</div>
+                <div class="stat-label">Total Subscribers</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-responsive">
+              <table id="subscribers-table">
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Joined Date</th>
+                    <th style="text-align: right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="subscribers-body">
+                  <tr>
+                    <td
+                      colspan="3"
+                      style="
+                        text-align: center;
+                        padding: 3rem;
+                        color: var(--text-muted);
+                      "
+                    >
+                      Loading subscribers...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="view-messages" class="hidden">
+          <div class="page-header">
+            <div>
+              <h2 class="page-title">Messages</h2>
+              <p style="color: var(--text-muted); font-size: 0.9rem">
+                Inbound inquiries from your contact form.
+              </p>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center">
+              <div class="input-group" style="margin-bottom: 0">
+                <input
+                  type="text"
+                  id="search-messages"
+                  placeholder="Search name/email/subject..."
+                  class="form-input"
+                  style="padding: 0.5rem 1rem; font-size: 0.85rem; width: 220px"
+                  onkeyup="filterMessages()"
+                />
+              </div>
+              <button
+                class="icon-btn"
+                onclick="fetchMessages()"
+                title="Refresh"
+              >
+                <i data-lucide="refresh-cw" size="20"></i>
+              </button>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th width="25%">Sender</th>
+                    <th width="50%">Message</th>
+                    <th>Date</th>
+                    <th style="text-align: right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="messages-body"></tbody>
+              </table>
+            </div>
+            <div
+              id="messages-empty"
+              style="
+                padding: 3rem;
+                text-align: center;
+                color: var(--text-muted);
+              "
+            >
+              No messages found.
+            </div>
+          </div>
+        </div>
+
+        <div id="view-files" class="hidden">
+          <div class="page-header">
+            <div>
+              <h2 class="page-title">Files</h2>
+              <p style="color: var(--text-muted); font-size: 0.9rem">
+                Manage your site assets and documents.
+              </p>
+            </div>
+            <button
+              class="icon-btn"
+              onclick="document.getElementById('file-upload').click()"
+              title="Upload File"
+            >
+              <i data-lucide="upload-cloud" size="24"></i>
+            </button>
+            <input
+              type="file"
+              id="file-upload"
+              style="display: none"
+              onchange="handleFileUpload(this)"
+            />
+          </div>
+          <div class="content-grid" id="files-grid">
+            <div
+              id="files-empty"
+              style="
+                padding: 3rem;
+                text-align: center;
+                color: var(--text-muted);
+                grid-column: 1 / -1;
+              "
+            >
+              No files uploaded yet.
+            </div>
+          </div>
+        </div>
+
+        <div id="view-comments" class="hidden">
+          <div class="page-header">
+            <div>
+              <h2 class="page-title">Comments</h2>
+              <p style="color: var(--text-muted); font-size: 0.9rem">
+                Manage user comments across your blog posts.
+              </p>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center">
+              <div class="input-group" style="margin-bottom: 0">
+                <input
+                  type="text"
+                  id="search-comments"
+                  placeholder="Search user/content..."
+                  class="form-input"
+                  style="padding: 0.5rem 1rem; font-size: 0.85rem; width: 220px"
+                  onkeyup="filterComments()"
+                />
+              </div>
+              <button
+                class="icon-btn"
+                onclick="fetchComments()"
+                title="Refresh"
+              >
+                <i data-lucide="refresh-cw" size="20"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-responsive">
+              <table id="comments-table">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Comment</th>
+                    <th>Post</th>
+                    <th>Date</th>
+                    <th style="text-align: right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="comments-body"></tbody>
+              </table>
+            </div>
+            <div
+              id="comments-empty"
+              style="
+                padding: 3rem;
+                text-align: center;
+                color: var(--text-muted);
+              "
+            >
+              No comments found.
+            </div>
+          </div>
+        </div>
+
+        <div id="view-audience" class="hidden">
+          <div class="page-header">
+            <div>
+              <h2 class="page-title">User Intelligence</h2>
+              <p style="color: var(--text-muted); font-size: 0.9rem">
+                Analyze individual user journeys and cross-platform interactions.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="table-card"
+            style="margin-bottom: 1.5rem; padding: 1.25rem"
+          >
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap">
+              <div
+                class="form-group"
+                style="flex: 1; min-width: 250px; margin-bottom: 0"
+              >
+                <label class="form-label">Search or Select User (Email)</label>
+                <div style="display: flex; gap: 0.5rem">
+                  <input
+                    type="text"
+                    id="user-search-input"
+                    class="form-input"
+                    placeholder="Type email to search..."
+                    list="user-datalist"
+                    style="flex: 1"
+                    oninput="if(this.list.querySelector('option[value=\''+this.value+'\']')) loadUserActivity(this.value)"
+                    onchange="loadUserActivity(this.value)"
+                  />
+                  <datalist id="user-datalist"></datalist>
+                  <button
+                    class="icon-btn"
+                    onclick="refreshAudienceList()"
+                    title="Refresh User List"
+                  >
+                    <i data-lucide="refresh-cw" size="18"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="user-profile-data" style="display: none">
+            <div
+              class="stats-container"
+              style="
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                margin-bottom: 1.5rem;
+              "
+            >
+              <div class="stat-card">
+                <div class="stat-icon" style="background: #e0e7ff; color: #4338ca">
+                  <i data-lucide="eye" size="20"></i>
+                </div>
+                <div class="stat-info">
+                  <div class="stat-value" id="user-stat-views">0</div>
+                  <div class="stat-label">Page Views</div>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background: #dcfce7; color: #15803d">
+                  <i data-lucide="message-square" size="20"></i>
+                </div>
+                <div class="stat-info">
+                  <div class="stat-value" id="user-stat-comments">0</div>
+                  <div class="stat-label">Comments</div>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background: #fef9c3; color: #a16207">
+                  <i data-lucide="mail" size="20"></i>
+                </div>
+                <div class="stat-info">
+                  <div class="stat-value" id="user-stat-messages">0</div>
+                  <div class="stat-label">Messages</div>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background: #ffedd5; color: #9a3412">
+                  <i data-lucide="user-check" size="20"></i>
+                </div>
+                <div class="stat-info">
+                  <div class="stat-value" id="user-stat-subscriber">No</div>
+                  <div class="stat-label">Subscriber</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-grid">
+              <section class="settings-section">
+                <div class="section-header">
+                  <i data-lucide="history" size="20"></i>
+                  <h3>Page Journeys</h3>
+                </div>
+                <div class="table-card">
+                  <div
+                    class="table-responsive"
+                    style="max-height: 400px; overflow-y: auto"
+                  >
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Page</th>
+                          <th>Date</th>
+                        </tr>
+                      </thead>
+                      <tbody id="user-activity-body"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+
+              <section class="settings-section">
+                <div class="section-header">
+                  <i data-lucide="message-circle" size="20"></i>
+                  <h3>All Interactions</h3>
+                </div>
+                <div
+                  id="user-interactions-container"
+                  class="table-card"
+                  style="padding: 1.25rem; max-height: 400px; overflow-y: auto"
+                >
+                  <p style="color: var(--text-muted); font-size: 0.85rem">
+                    Select a user to view detailed interactions.
+                  </p>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <div
+            id="audience-empty"
+            style="padding: 5rem; text-align: center; color: var(--text-muted)"
+          >
+            <i
+              data-lucide="user-search"
+              size="48"
+              style="opacity: 0.2; margin-bottom: 1rem"
+            ></i>
+            <p>
+              Select a user from the dropdown above to analyze their activity.
+            </p>
+          </div>
+        </div>
+
+        <div id="view-settings" class="hidden">
+          <div class="page-header">
+            <div>
+              <h2 class="page-title">Settings</h2>
+              <p style="color: var(--text-muted); font-size: 0.9rem">
+                Global configuration for your portfolio and blog.
+              </p>
+            </div>
+            <button
+              class="icon-btn"
+              onclick="saveSettings()"
+              title="Save Changes"
+            >
+              <i data-lucide="save" size="24" style="color: var(--accent)"></i>
+            </button>
+          </div>
+
+          <div class="settings-grid">
+            <section class="settings-section">
+              <div class="section-header">
+                <i data-lucide="sliders" size="20"></i>
+                <h3>System Preferences</h3>
+              </div>
+              <div class="table-card">
+                <div class="toggle-group">
+                  <div>
+                    <label class="form-label">Maintenance Mode</label>
+                    <p class="form-help">
+                      Temporarily redirect visitors to a maintenance page
+                    </p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="set-maint-mode" />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="post-modal" class="modal-overlay">
+      <div class="modal-box zoom-in modal-lg">
+        <div class="modal-header">
+          <h3
+            id="modal-title"
+            style="font-family: &quot;Playfair Display&quot;, serif"
+          >
+            Create Article
+          </h3>
+          <button onclick="closeModal()" class="icon-btn">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <form id="post-form">
+          <input type="hidden" id="post-id" />
+
+          <div class="form-grid">
+            <div class="form-group" style="grid-column: span 2">
+              <label class="form-label">Title</label>
+              <input
+                type="text"
+                id="p-title"
+                class="form-input"
+                placeholder="e.g. The Future of Fintech"
+                required
+              />
+            </div>
+
+            <div class="form-group" style="grid-column: span 2">
+              <label class="form-label">Cover Image URL</label>
+              <input
+                type="url"
+                id="p-image"
+                class="form-input"
+                placeholder="https://..."
+              />
+              <img
+                id="image-preview"
+                src=""
+                alt="Preview"
+                style="
+                  display: none;
+                  width: 100%;
+                  height: 150px;
+                  object-fit: cover;
+                  border-radius: 6px;
+                  margin-top: 0.5rem;
+                  border: 1px solid var(--border);
+                "
+              />
+              <div
+                style="
+                  font-size: 0.75rem;
+                  color: var(--text-muted);
+                  margin-top: 0.3rem;
+                "
+              >
+                Leave empty for default gradient.
+              </div>
+            </div>
+
+            <div class="form-group" style="grid-column: span 2">
+              <label class="form-label">Attachment URL (PDF, DOCX, etc.)</label>
+              <div style="display: flex; gap: 0.5rem">
+                <input
+                  type="text"
+                  id="p-file"
+                  class="form-input"
+                  placeholder="Paste URL or upload..."
+                  style="flex: 1"
+                />
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  onclick="document.getElementById('p-file-upload').click()"
+                  style="padding: 0.5rem; white-space: nowrap"
+                >
+                  <i data-lucide="upload" size="14"></i> Upload
+                </button>
+                <input
+                  type="file"
+                  id="p-file-upload"
+                  style="display: none"
+                  onchange="handlePostFileUpload(this)"
+                />
+              </div>
+              <div id="attachment-preview" style="display: none; margin-top: 0.75rem;"></div>
+              <div
+                style="
+                  font-size: 0.75rem;
+                  color: var(--text-muted);
+                  margin-top: 0.3rem;
+                "
+              >
+                Linking a file will add a direct download/view button to the
+                post.
+              </div>
+            </div>
+
+            <div class="form-group" style="grid-column: span 2">
+              <label class="form-label">Excerpt</label>
+              <textarea
+                id="p-excerpt"
+                class="form-input"
+                rows="2"
+                placeholder="Brief summary for the card view..."
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group" style="grid-column: span 2">
+              <label class="form-label">Content</label>
+
+              <input type="hidden" id="p-content" />
+              <div id="editor-container"></div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline"
+              onclick="closeModal()"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" id="save-btn">
+              Save & Publish
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="stats-modal" class="modal-overlay">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3 class="modal-title" id="stats-modal-title">Article Stats</h3>
+          <button class="icon-btn" onclick="closeStatsModal()">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="stats-container">
+            <div class="stat-box">
+              <div class="stat-icon"><i data-lucide="eye"></i></div>
+              <div>
+                <div class="stat-value" id="stats-total-views">0</div>
+                <div class="stat-label">Total Views</div>
+              </div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-icon"><i data-lucide="users"></i></div>
+              <div>
+                <div class="stat-value" id="stats-unique-visitors">0</div>
+                <div class="stat-label">Unique Readers</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="position: relative; width: 100%; height: 280px">
+            <canvas id="viewsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    <div id="user-profile-modal" class="modal-overlay">
+      <div class="modal-box modal-md">
+        <div class="modal-header">
+          <h3 class="modal-title" id="user-profile-title">Visitor Profile</h3>
+          <button class="icon-btn" onclick="closeUserProfileModal()">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="user-profile-details"></div>
+          <div style="margin-top: 1.5rem">
+            <div
+              class="analytics-section-title"
+              style="margin-bottom: 0.5rem; font-size: 1rem"
+            >
+              Action History
+            </div>
+            <div
+              id="user-profile-activity"
+              class="list-group"
+              style="max-height: 400px; overflow-y: auto"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/js/supabase-config.js"></script>
+    <script src="assets/js/admin.js"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

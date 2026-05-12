@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>Khushaank Gupta</ShortName>
+  <Description>Search financial insights and AI models on Khushaank Gupta's Portfolio.</Description>
+  <Tags>finance strategy AI ACCA audit tax investment</Tags>
+  <Contact>khushaankgupta@gmail.com</Contact>
+  <Url type="text/html" method="get" template="https://khushaankgupta.qzz.io/blog?q={searchTerms}"/>
+  <Url type="application/x-suggestions+json" method="get" template="https://khushaankgupta.qzz.io/api/suggest?q={searchTerms}"/>
+  <Image height="16" width="16" type="image/x-icon">https://khushaankgupta.qzz.io/assets/images/favicon.webp</Image>
+  <InputEncoding>UTF-8</InputEncoding>
+  <SearchForm>https://khushaankgupta.qzz.io/blog</SearchForm>
+</OpenSearchDescription>

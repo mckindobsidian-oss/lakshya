@@ -1,0 +1,22 @@
+{
+  "name": "Khushaank Gupta — AI, Strategy & Finance",
+  "short_name": "Khushaank",
+  "description": "Portfolio of Khushaank Gupta — an ACCA student merging global financial standards with AI & Data Science.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#ffffff",
+  "orientation": "any",
+  "categories": ["finance", "technology", "education"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/assets/images/favicon.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}
+

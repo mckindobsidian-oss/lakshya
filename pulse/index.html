@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Article — Khushaank Gupta</title>
+    <link rel="icon" type="image/png" href="/assets/images/favicon.webp" />
+    <link rel="apple-touch-icon" href="/assets/images/favicon.webp" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Khushaank Gupta — Insights RSS Feed"
+      href="/rss.xml"
+    />
+    <link rel="author" href="/humans.txt" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta
+      name="description"
+      content="Khushaank's Pulse - Insights on Quant, LLMs, and Strategic Finance."
+    />
+    <meta
+      name="keywords"
+      content="Khushaank Gupta, ACCA Student, AI in Finance, Python for Finance, Financial Modeling, Quantitative Analysis, Strat Finance"
+    />
+    <meta name="author" content="Khushaank Gupta" />
+    <script>
+      (function () {
+        const params = new URLSearchParams(window.location.search);
+        const hasId = params.has("id");
+        const hasSlug = params.has("slug");
+        const path = window.location.pathname || "";
+        const hasSlugInPath = /^\/pulse\/[^/?#]+/.test(path);
+        const hash = window.location.hash;
+        const isAuthCallback =
+          params.has("code") ||
+          params.has("error") ||
+          hash.includes("access_token") ||
+          hash.includes("error") ||
+          hash.includes("type=recovery");
+        const isPulseRootPath =
+          path === "/pulse" || path === "/pulse/" || path.endsWith("/pulse/index.html");
+        if (!hasId && !hasSlug && !hasSlugInPath && !isAuthCallback && isPulseRootPath) {
+          window.location.replace("/blog");
+        }
+      })();
+    </script>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://khushaankgupta.qzz.io/pulse" />
+    <meta property="og:title" content="Article — Khushaank Gupta" />
+    <meta
+      property="og:description"
+      content="Khushaank's Pulse - Insights on Quant, LLMs, and Strategic Finance."
+    />
+    <meta
+      property="og:image"
+      content="https://khushaankgupta.qzz.io/assets/images/hero.webp"
+    />
+    <meta property="og:site_name" content="Khushaank Gupta" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Khushaankgupta" />
+    <meta name="twitter:creator" content="@Khushaankgupta" />
+    <meta name="twitter:url" content="https://khushaankgupta.qzz.io/pulse/" />
+    <meta name="twitter:title" content="Article — Khushaank Gupta" />
+    <meta
+      name="twitter:description"
+      content="Khushaank's Pulse - Insights on Quant, LLMs, and Strategic Finance."
+    />
+    <meta
+      name="twitter:image"
+      content="https://khushaankgupta.qzz.io/assets/images/hero.webp"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <link rel="preload" href="/assets/css/style.css?v=6" as="style" />
+    <link rel="stylesheet" href="/assets/css/style.css?v=6" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+      rel="stylesheet"
+    />
+
+    <script src="/assets/js/lucide.min.js" defer></script>
+    <script src="/assets/js/supabase-config.js" defer></script>
+    <script src="/assets/js/supabase.min.js" defer></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Article — Khushaank Gupta",
+        "description": "Khushaank's Pulse - Insights on Quant, LLMs, and Strategic Finance.",
+        "url": "https://khushaankgupta.qzz.io/pulse",
+        "author": { "@type": "Person", "name": "Khushaank Gupta" }
+      }
+    </script>
+  </head>
+  <body class="viewer-page">
+    <div class="preloader" aria-hidden="true">
+      <div class="loader-bar"></div>
+    </div>
+    <div id="reading-progress-container" class="reading-progress-container">
+      <div id="reading-progress" class="reading-progress-bar"></div>
+    </div>
+
+    <div id="article-search-bar" class="article-search-container">
+      <div class="search-inner">
+        <i data-lucide="search" size="18"></i>
+        <input
+          type="text"
+          id="article-search-input"
+          placeholder="Find in article..."
+          autocomplete="off"
+        />
+        <div class="search-controls">
+          <span id="search-results-count">0/0</span>
+          <button id="search-prev" title="Previous match">
+            <i data-lucide="chevron-up" size="18"></i>
+          </button>
+          <button id="search-next" title="Next match">
+            <i data-lucide="chevron-down" size="18"></i>
+          </button>
+          <button id="search-close" title="Close search (Esc)">
+            <i data-lucide="x" size="18"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <header class="navbar" role="banner">
+      <div class="container nav-container" role="navigation" aria-label="Main Navigation">
+        <!-- Back Button for Viewer Page -->
+        <a
+          id="viewer-back-btn"
+          href="/blog"
+          class="nav-back-btn pulse-nav-back"
+        >
+          <i data-lucide="arrow-left" size="18"></i>
+          <span class="back-label">Back</span>
+        </a>
+        <a href="/" class="brand">KG.</a>
+        <nav>
+          <ul class="nav-links">
+            <li><a href="/#about" class="nav-link">About</a></li>
+            <li><a href="/ai" class="nav-link">AI</a></li>
+            <li><a href="/resources" class="nav-link">Resources</a></li>
+            <li><a href="/blog" class="nav-link active">Insights</a></li>
+            <li><a href="/contact" class="nav-link">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="nav-cta-wrapper">
+          <a href="/contact" class="btn nav-cta-btn">Let's Talk</a>
+        </div>
+        <div class="row mobile-toggle">
+          <input type="checkbox" id="hamburger" aria-label="Toggle Navigation Menu" />
+          <label for="hamburger" class="hamburger" aria-hidden="true">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-menu">
+      <a href="/#about" class="mobile-link">About</a>
+      <a href="/ai" class="mobile-link">AI</a>
+      <a href="/resources" class="mobile-link">Resources</a>
+      <a href="/blog" class="mobile-link">Insights</a>
+      <a href="/contact" class="mobile-link">Contact</a>
+      <a href="/contact" class="btn mobile-cta">Let's Talk</a>
+    </div>
+
+    <main id="main-content" class="article-container fade-in" role="main">
+      <div id="article-loading" class="article-skeleton">
+        <div class="skeleton-meta-bar">
+          <div class="skeleton-line theme-w-42"></div>
+          <span class="theme-muted-9">•</span>
+          <div class="skeleton-line theme-w-43"></div>
+        </div>
+
+        <div class="skeleton-line theme-margin-w-44"></div>
+        <div class="skeleton-line theme-margin-w-45"></div>
+
+        <div class="skeleton-line theme-margin-w-46"></div>
+
+        <div class="skeleton-meta-bar theme-margin-47">
+          <div class="skeleton-line theme-w-48"></div>
+          <div class="skeleton-line theme-w-48"></div>
+          <div class="skeleton-line theme-w-48"></div>
+        </div>
+
+        <div class="skeleton-line theme-margin-w-49"></div>
+
+        <div class="skeleton-line theme-margin-w-50"></div>
+        <div class="skeleton-line theme-margin-w-50"></div>
+        <div class="skeleton-line theme-margin-w-51"></div>
+        <div class="skeleton-line theme-margin-w-50"></div>
+        <div class="skeleton-line theme-margin-w-52"></div>
+        <div class="skeleton-line theme-margin-w-50"></div>
+        <div class="skeleton-line theme-margin-w-53"></div>
+        <div class="skeleton-line theme-margin-w-54"></div>
+      </div>
+
+      <article id="article-display" class="theme-55">
+        <header class="article-header">
+          <div class="article-meta">
+            <span id="article-date"></span> •
+            <span id="article-views"></span> Views
+          </div>
+
+          <h1 id="article-title"></h1>
+
+          <div class="meta-stats">
+            <div class="meta-item">
+              <i data-lucide="clock" size="14"></i>
+              <span id="reading-time"></span>
+            </div>
+          </div>
+        </header>
+
+        <div id="article-body" class="article-content"></div>
+
+        <div class="theme-center-margin-56">
+          <a href="/blog" class="btn btn-outline">
+            <i data-lucide="arrow-left" size="16" class="theme-57"></i>
+            Back to Insights
+          </a>
+        </div>
+
+        <section id="related-reading" class="related-reading theme-55">
+          <h3 class="related-title">
+            <i data-lucide="book-open"></i> Related Reading
+          </h3>
+          <div id="related-posts-grid" class="related-posts-grid"></div>
+        </section>
+
+        <hr class="theme-58" />
+
+        <div class="comments-section">
+          <div class="comments-heading-row theme-margin-59">
+            <h3>Conversation</h3>
+            <div class="comments-heading-actions">
+              <button
+                id="btn-share-menu"
+                class="comment-share-btn"
+                type="button"
+                aria-label="Share this article"
+                title="Share this article"
+              >
+                <i data-lucide="share-2" size="15"></i>
+              </button>
+              <button
+                id="comment-like-btn"
+                class="comment-like-btn clap-action js-article-like-btn"
+                type="button"
+                aria-label="Like this article"
+                title="Like this article"
+              >
+                <i data-lucide="sparkles" size="15"></i>
+                <span id="clap-count" aria-live="polite">0</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="auth-comment" class="theme-center-margin-60">
+            <p class="theme-margin-muted-61">
+              Join the conversation by signing in.
+            </p>
+            <button id="google-login-btn" class="btn btn-primary theme-62">
+              <svg
+                width="18"
+                height="18"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 48 48"
+              >
+                <path
+                  fill="#EA4335"
+                  d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                ></path>
+                <path
+                  fill="#4285F4"
+                  d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+                ></path>
+                <path
+                  fill="#FBBC05"
+                  d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.79l7.97-6.2z"
+                ></path>
+                <path
+                  fill="#34A853"
+                  d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                ></path>
+                <path fill="none" d="M0 0h48v48H0z"></path>
+              </svg>
+              Sign in with Google
+            </button>
+          </div>
+
+          <form id="comment-form" class="comment-form">
+            <div class="comment-user-info">
+              <span id="user-display-name" class="user-display-name"></span>
+              <button type="button" id="logout-btn" class="logout-btn">
+                Sign Out
+              </button>
+            </div>
+
+            <div class="comment-input-wrapper pill-comment-form">
+              <input
+                type="text"
+                id="comment-content"
+                placeholder="Share your thoughts..."
+                required=""
+                class="comment-textarea pill-textarea"
+              />
+              <div class="attach-wrapper">
+                <button
+                  type="button"
+                  id="add-image-btn"
+                  class="add-image-btn attach-trigger"
+                  title="Add attachment"
+                >
+                  <i data-lucide="plus" size="20"></i>
+                </button>
+                <input
+                  type="file"
+                  id="comment-image-upload"
+                  accept="image/png, image/jpeg, image/webp"
+                  style="display: none"
+                />
+                <!-- Attachment Popover Menu -->
+                <div id="attach-popover" class="attach-popover">
+                  <div class="attach-popover-arrow"></div>
+                  <div class="attach-drop-zone" id="attach-drop-zone">
+                    <i data-lucide="upload-cloud" size="28"></i>
+                    <span>Drag & drop an image here</span>
+                  </div>
+                  <div class="attach-divider"><span>or</span></div>
+                  <button
+                    type="button"
+                    class="attach-option"
+                    id="attach-from-computer"
+                  >
+                    <i data-lucide="hard-drive" size="18"></i>
+                    Select from Computer
+                  </button>
+                </div>
+              </div>
+              <div class="comment-actions pill-actions">
+                <button
+                  type="submit"
+                  id="submit-comment-btn"
+                  class="post-comment-btn pill-submit-btn"
+                  title="Post Comment"
+                >
+                  <span class="submit-arrow" aria-hidden="true">↑</span>
+                </button>
+              </div>
+            </div>
+
+            <div
+              id="comment-image-preview"
+              class="comment-image-preview"
+              style="display: none"
+            >
+              <img id="preview-img" src="" alt="Preview" />
+              <button
+                type="button"
+                id="remove-image-btn"
+                class="remove-image-btn"
+                title="Remove image"
+              >
+                <i data-lucide="x" size="14"></i>
+              </button>
+            </div>
+          </form>
+
+          <div id="comments-list">
+            <div class="comment-skeleton">
+              <div class="skeleton-meta-bar theme-margin-71">
+                <div class="skeleton-line theme-w-72"></div>
+                <div class="skeleton-line theme-w-73"></div>
+              </div>
+              <div class="skeleton-line theme-margin-w-74"></div>
+              <div class="skeleton-line theme-w-75"></div>
+            </div>
+            <div class="comment-skeleton">
+              <div class="skeleton-meta-bar theme-margin-71">
+                <div class="skeleton-line theme-w-76"></div>
+                <div class="skeleton-line theme-w-42"></div>
+              </div>
+              <div class="skeleton-line theme-margin-w-77"></div>
+              <div class="skeleton-line theme-w-78"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <!-- Floating Table of Contents (outside transformed container) -->
+    <div id="floating-toc-wrap" class="floating-toc-wrap">
+      <button
+        id="floating-toc-trigger"
+        class="floating-toc-trigger"
+        aria-label="Open table of contents"
+        aria-controls="floating-toc"
+        aria-expanded="false"
+        title="Table of contents"
+        type="button"
+      >
+        <span class="toc-trigger-line"></span>
+        <span class="toc-trigger-line"></span>
+        <span class="toc-trigger-line"></span>
+      </button>
+
+      <div
+        id="floating-toc"
+        class="floating-toc"
+        role="navigation"
+        aria-label="Table of contents"
+      >
+        <div class="floating-toc-header" aria-hidden="true"></div>
+        <ul id="floating-toc-list" class="floating-toc-list"></ul>
+      </div>
+    </div>
+    <footer role="contentinfo">
+      <div class="container theme-center-79">
+        © <span id="current-year"></span> Khushaank Gupta.
+        <span class="footer-legal theme-33">
+          • <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy</a> •
+          <a href="/terms" target="_blank" rel="noopener noreferrer">Terms</a>
+        </span>
+      </div>
+    </footer>
+
+    <button
+      id="scroll-top-btn"
+      class="scroll-top-btn"
+      aria-label="Scroll to top"
+    >
+      <i data-lucide="arrow-up" size="24" aria-hidden="true"></i>
+    </button>
+
+    <div id="newsletter-slidein" class="newsletter-slidein">
+      <span id="nl-close" class="nl-close">✕</span>
+      <div class="ns-content">
+        <h4>📬 Stay Updated!</h4>
+        <p class="theme-margin-80">
+          Join the Inner Circle for exclusive insights, or follow on LinkedIn.
+        </p>
+
+        <form id="newsletter-slidein-form" class="theme-margin-81">
+          <input
+            type="email"
+            placeholder="Your email"
+            required=""
+            class="theme-82"
+          />
+          <button type="submit" class="theme-83">Join</button>
+        </form>
+
+        <div class="theme-margin-84">
+          <span>OR</span>
+        </div>
+
+        <a
+          href="https://www.linkedin.com/in/khushaank/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="ns-btn theme-w-85"
+          id="linkedin-follow-btn"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+            ></path>
+          </svg>
+          Follow on LinkedIn
+        </a>
+      </div>
+    </div>
+
+    <div class="focus-mode-indicator">Focus Mode Active - Alt + F to exit</div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="share-modal-overlay">
+      <div class="share-modal login-modal-content">
+        <div class="share-modal-header login-modal-header">
+          <h3>Sign In Required</h3>
+          <button
+            id="close-login-modal"
+            class="btn-close-modal login-modal-close"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="share-modal-body login-modal-body">
+          <p class="login-modal-text">
+            Join the conversation and show your appreciation by signing in.
+          </p>
+          <button
+            id="modal-google-login-btn"
+            class="btn btn-primary login-modal-btn"
+          >
+            <svg
+              width="18"
+              height="18"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              class="login-modal-icon"
+            >
+              <path
+                fill="#EA4335"
+                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+              ></path>
+              <path
+                fill="#4285F4"
+                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+              ></path>
+              <path
+                fill="#FBBC05"
+                d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.79l7.97-6.2z"
+              ></path>
+              <path
+                fill="#34A853"
+                d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+              ></path>
+              <path fill="none" d="M0 0h48v48H0z"></path>
+            </svg>
+            Sign in with Google
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- YouTube-style Share Modal -->
+    <div id="yt-share-modal" class="share-modal-overlay">
+      <div class="share-modal">
+        <div class="share-modal-header">
+          <h3>Share</h3>
+          <button id="close-share-modal" class="btn-close-modal">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="share-modal-body">
+          <div class="share-icons-container">
+            <div class="share-icons-grid" id="share-icons-grid">
+              <button class="share-icon-btn copy-action" title="Copy Link">
+                <div class="icon-circle theme-86">
+                  <i data-lucide="copy" size="24" color="#fff"></i>
+                </div>
+                <span>Copy</span>
+              </button>
+              <a
+                href="#"
+                id="share-whatsapp"
+                class="share-icon-btn"
+                target="_blank"
+              >
+                <div class="icon-circle theme-87">
+                  <i data-lucide="message-circle" size="24" color="#fff"></i>
+                </div>
+                <span>WhatsApp</span>
+              </a>
+              <a
+                href="#"
+                id="share-twitter"
+                class="share-icon-btn"
+                target="_blank"
+              >
+                <div class="icon-circle theme-88">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff">
+                    <path
+                      d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                    ></path>
+                  </svg>
+                </div>
+                <span>X</span>
+              </a>
+              <a
+                href="#"
+                id="share-linkedin"
+                class="share-icon-btn"
+                target="_blank"
+              >
+                <div class="icon-circle theme-89">
+                  <i data-lucide="linkedin" size="24" color="#fff"></i>
+                </div>
+                <span>LinkedIn</span>
+              </a>
+              <a
+                href="#"
+                id="share-email"
+                class="share-icon-btn"
+                target="_blank"
+              >
+                <div class="icon-circle theme-90">
+                  <i data-lucide="mail" size="24" color="#fff"></i>
+                </div>
+                <span>Email</span>
+              </a>
+              <button id="btn-embed" class="share-icon-btn">
+                <div class="icon-circle theme-91">
+                  <i data-lucide="code" size="24" color="#fff"></i>
+                </div>
+                <span>Embed</span>
+              </button>
+            </div>
+            <button
+              class="share-scroll-btn right"
+              id="share-scroll-right"
+              aria-label="Scroll right"
+            >
+              <i data-lucide="chevron-right"></i>
+            </button>
+          </div>
+          <div class="share-link-box">
+            <input type="text" id="share-link-input" readonly="" value="" />
+            <button id="share-copy-btn" class="btn">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/js/search.js" defer></script>
+    <script src="/assets/js/script.js?v=6" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+  </body>
+</html>

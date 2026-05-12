@@ -1,0 +1,70 @@
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  X-XSS-Protection: 1; mode=block
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.xml
+  Cache-Control: public, max-age=0, must-revalidate
+
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/css/*
+  Cache-Control: public, max-age=2592000
+
+/assets/js/*
+  Cache-Control: public, max-age=2592000
+
+/assets/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/robots.txt
+  Cache-Control: public, max-age=86400
+
+/humans.txt
+  Cache-Control: public, max-age=86400
+
+/manifest.json
+  Cache-Control: public, max-age=86400
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+/rss.xml
+  Cache-Control: public, max-age=3600
+  Content-Type: application/rss+xml; charset=utf-8
+
+/admin
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/admin.html
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/login
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/login.html
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/offline
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/offline.html
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/maintenance
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/maintenance.html
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/404.html
+  X-Robots-Tag: noindex, nofollow, noarchive
