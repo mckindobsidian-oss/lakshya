@@ -87,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
       quill.deleteText(range.index, "Uploading image...".length);
       quill.insertEmbed(range.index, "image", publicUrl);
     } catch (error) {
-      // console.error("Upload failed:", error);
       quill.deleteText(range.index, "Uploading image...".length);
       alert("Image upload failed: " + error.message);
     }
@@ -147,11 +146,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // Valid session
     if (dashboard) dashboard.classList.remove("hidden");
     fetchPosts();
 
-    // Watch auth state — only redirect on explicit sign-out, not initial load
     supabaseClient.auth.onAuthStateChange((event, s) => {
       if (event === "SIGNED_OUT") {
         window.location.href = "login.html";
@@ -194,15 +191,12 @@ window.switchView = function (viewId) {
   const activeNav = document.getElementById(`nav-${viewId}`);
   if (activeView) {
     activeView.classList.remove("hidden");
-    // Force reflow
     void activeView.offsetWidth;
     activeView.classList.add("view-section");
   }
   if (activeNav) activeNav.classList.add("active");
 
-  // Reset/Clear specific views
   if (viewId === "audience") {
-    // Clear profile if no search term
     const input = document.getElementById("user-search-input");
     if (input && !input.value) {
       const profileData = document.getElementById("user-profile-data");
@@ -213,7 +207,6 @@ window.switchView = function (viewId) {
     refreshAudienceList();
   }
 
-  // Trigger data fetches
   const fetchMap = {
     dashboard: () => loadDashboardAnalytics(currentRange),
     blogs: fetchPosts,
@@ -229,7 +222,6 @@ window.switchView = function (viewId) {
 
 let allPosts = [];
 
-// Search filter for blog articles
 const searchInput = document.getElementById("search-input");
 if (searchInput) {
   searchInput.addEventListener("input", (e) => {
@@ -324,7 +316,7 @@ async function fetchAnalytics() {
   const referrers = {};
   const devices = { Desktop: 0, Mobile: 0 };
   const visitors = {};
-  window.currentVisitors = visitors; // For filtering
+  window.currentVisitors = visitors;
 
   views.forEach((v) => {
     const tid = v.tracking_id || "Anonymous";
@@ -442,14 +434,14 @@ async function fetchAnalytics() {
 
   html += `
       <div class="split-grid" style="margin-top: 2rem;">
-          <!-- Top Pages -->
+          
           <div>
                <div class="analytics-section-title"><i data-lucide="layout" size="20"></i> Top Pages</div>
                <div class="list-group">
                   ${pageRows
-                    .slice(0, 5)
-                    .map(
-                      (p) => `
+      .slice(0, 5)
+      .map(
+        (p) => `
                       <div class="list-item">
                           <div style="display:flex; flex-direction:column;">
                                <span style="font-weight:600">${p.title}</span>
@@ -461,20 +453,20 @@ async function fetchAnalytics() {
                           </div>
                       </div>
                   `,
-                    )
-                    .join("")}
+      )
+      .join("")}
                   ${pageRows.length === 0 ? '<div style="padding:1rem">No page data.</div>' : ""}
                </div>
           </div>
   
-          <!-- Audience / Referrers -->
+          
           <div>
                <div class="analytics-section-title"><i data-lucide="globe" size="20"></i> Top Sources</div>
                <div class="list-group">
                   ${topReferrers
-                    .map(([ref, count]) => {
-                      const percent = Math.round((count / totalViews) * 100);
-                      return `
+      .map(([ref, count]) => {
+        const percent = Math.round((count / totalViews) * 100);
+        return `
                       <div class="list-item">
                           <div class="progress-bg" style="width: ${percent}%"></div>
                           <div class="list-content">
@@ -483,12 +475,12 @@ async function fetchAnalytics() {
                           </div>
                       </div>
                       `;
-                    })
-                    .join("")}
+      })
+      .join("")}
                   ${topReferrers.length === 0 ? '<div style="padding:1rem">No referrer data.</div>' : ""}
                </div>
                
-               <!-- Device Stats -->
+               
                <div class="analytics-section-title" style="margin-top: 2rem;"><i data-lucide="smartphone" size="20"></i> Devices</div>
                 <div class="list-group">
                    <div class="list-item"><span>Desktop</span> <span style="font-weight:600">${devices.Desktop}</span></div>
@@ -497,7 +489,7 @@ async function fetchAnalytics() {
           </div>
       </div>
 
-      <!-- Visitor Activity Search & Recent Activity -->
+      
       <div style="margin-top: 2rem;">
           <div class="analytics-section-title" style="display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="history" size="20"></i> Recent Activity</div>
@@ -1572,7 +1564,7 @@ async function fetchFiles() {
     if (rootError && attachmentsError) {
       showToast(
         "Error fetching files: " +
-          (rootError.message || attachmentsError.message),
+        (rootError.message || attachmentsError.message),
         "error",
       );
       grid.innerHTML = "";
@@ -1645,18 +1637,17 @@ async function fetchFiles() {
 
       card.innerHTML = `
         <div style="height: 140px; background: ${bgColor}; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border); transition: all 0.2s; position: relative;">
-          ${
-            isImage
-              ? `<img src="${publicUrl}" style="width: 100%; height: 100%; object-fit: cover;">`
-              : isPdf
-                ? `<iframe src="${publicUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH" style="width: 100%; height: 100%; border: none; pointer-events: none;" scrolling="no" tabindex="-1"></iframe>`
-                : `
+          ${isImage
+          ? `<img src="${publicUrl}" style="width: 100%; height: 100%; object-fit: cover;">`
+          : isPdf
+            ? `<iframe src="${publicUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH" style="width: 100%; height: 100%; border: none; pointer-events: none;" scrolling="no" tabindex="-1"></iframe>`
+            : `
             <div style="text-align: center;">
               <i data-lucide="${previewIcon}" size="40" style="color: ${iconColor}"></i>
               <div style="font-size: 0.65rem; font-weight: 800; color: ${iconColor}; margin-top: 4px; text-transform: uppercase;">${ext}</div>
             </div>
           `
-          }
+        }
           <div style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.4); color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; backdrop-filter: blur(4px);">
             ${ext.toUpperCase()}
           </div>
@@ -2115,7 +2106,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  /* Security: Session Watchdog */
+
   setInterval(async () => {
     try {
       const {
@@ -2129,7 +2120,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, 30000);
 
-  /* Security: Idle Logout (15 mins) */
+
   let idleTimer;
   const resetIdleTimer = () => {
     clearTimeout(idleTimer);

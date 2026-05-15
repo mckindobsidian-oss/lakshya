@@ -192,7 +192,7 @@ body {
   position: relative;
 }
 
-/* Custom Scrollbar for Main Content */
+
 .main-content::-webkit-scrollbar {
   width: 6px;
 }
@@ -659,7 +659,7 @@ tr:hover {
   text-align: center;
 }
 
-/* Stats Modal */
+
 #stats-modal .modal-box {
   max-width: 640px;
 }
@@ -1059,7 +1059,7 @@ tr:hover {
   }
 }
 
-/* --- Added Enhanced Settings & Responsive Fixes --- */
+
 
 .settings-grid {
   display: grid;
@@ -1128,7 +1128,7 @@ tr:hover {
   margin-top: 2px;
 }
 
-/* Toggle Switch Styles */
+
 .switch {
   position: relative;
   display: inline-block;
@@ -1179,7 +1179,7 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-/* --- Global Responsiveness --- */
+
 @media (max-width: 1200px) {
   .main-content {
     padding: 2rem;
@@ -1215,7 +1215,7 @@ input:checked + .slider:before {
 
 @media (max-width: 768px) {
   .admin-layout {
-    display: block; /* Stack on mobile */
+    display: block; 
   }
 
   .main-content {
@@ -1313,7 +1313,7 @@ input:checked + .slider:before {
     padding: 0;
   }
 
-  /* Audience View Responsive Fixes */
+  
   #user-profile-data .stats-container {
     grid-template-columns: repeat(2, 1fr) !important;
   }
@@ -1364,7 +1364,7 @@ input:checked + .slider:before {
   }
 }
 
-/* Base style stabilization to avoid reflow glitches */
+
 .main-content {
   overflow-x: hidden;
   position: relative;
@@ -1379,7 +1379,7 @@ canvas {
   max-width: 100%;
 }
 
-/* Preloader Styles */
+
 .preloader {
   position: fixed;
   inset: 0;
@@ -1420,7 +1420,7 @@ canvas {
   }
 }
 
-/* User Intelligence Styles */
+
 .stat-card {
   background: white;
   padding: 1.25rem;
@@ -1486,13 +1486,13 @@ canvas {
   background-color: rgba(37, 99, 235, 0.03);
 }
 
-/* Fix for datalist appearing awkward */
+
 #user-datalist option {
   padding: 0.5rem;
   background: white;
 }
 
-/* --- Global Responsiveness Overrides --- */
+
 @media (max-width: 1200px) {
   .main-content {
     padding: 2rem;
@@ -1654,7 +1654,7 @@ canvas {
     border-radius: 0 !important;
   }
 
-  /* Audience & Profile Data Fixes */
+  
   #user-profile-data .stats-container {
     grid-template-columns: 1fr 1fr !important;
   }
@@ -1699,11 +1699,11 @@ canvas {
   }
 
   .form-input {
-    font-size: 16px !important; /* Prevent iOS zoom */
+    font-size: 16px !important; 
   }
 }
 
-/* Base style stabilization */
+
 .main-content {
   overflow-x: hidden;
   position: relative;
@@ -1724,7 +1724,7 @@ canvas {
   display: none !important;
 }
 
-/* User Intelligence Extra Styles */
+
 .stat-card {
   background: white;
   padding: 1.25rem;

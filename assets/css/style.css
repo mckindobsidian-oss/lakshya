@@ -33,7 +33,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Skip Link for Accessibility */
+
 .skip-link {
   position: absolute;
   top: -100px;
@@ -52,7 +52,7 @@
   top: 0;
 }
 
-/* Improved Focus States */
+
 :focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 4px;
@@ -395,7 +395,7 @@ h2 {
   color: var(--accent);
 }
 
-/* Hamburger CSS */
+
 label.hamburger {
   display: block;
   background: transparent;
@@ -529,7 +529,7 @@ input#hamburger:checked + label.hamburger .line:nth-child(3) {
   position: relative;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  /* Refined edge fade */
+  
   mask-image: linear-gradient(
     to right,
     transparent,
@@ -586,7 +586,7 @@ input#hamburger:checked + label.hamburger .line:nth-child(3) {
   opacity: 0.4;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .marquee-wrapper {
     padding: 1.5rem 0;
@@ -1634,7 +1634,7 @@ footer {
   }
 }
 
-/* Base Mobile Bottom Layout */
+
 @media (max-width: 1100px) {
   .article-actions-floating {
     position: fixed;
@@ -1674,7 +1674,7 @@ footer {
   }
 }
 
-/* Notion-like Right Desktop Layout */
+
 @media (min-width: 1300px) {
   .viewer-page .article-actions-floating {
     position: fixed;
@@ -1783,7 +1783,7 @@ footer {
   }
 }
 
-/* Attachment Popover */
+
 .attach-wrapper {
   position: relative;
   display: flex;
@@ -1901,7 +1901,7 @@ footer {
   margin-top: 0.25rem;
 }
 
-/* Comment Image Preview (clean) */
+
 .comment-image-preview {
   position: relative;
   margin-top: 1rem;
@@ -2169,7 +2169,7 @@ footer {
   display: none;
 }
 
-/* Notion-like Right Desktop Layout for TOC */
+
 @media (min-width: 1300px) {
   .floating-toc-wrap {
     position: fixed;
@@ -2306,7 +2306,7 @@ footer {
   font-size: 1.5rem;
 }
 
-/* Comment Form Styles */
+
 .comment-form {
   margin-bottom: 2rem;
 }
@@ -7123,7 +7123,7 @@ textarea.form-control {
   margin-bottom: 1rem;
 }
 
-/* ===== Case Studies & Deep Dives — Innovation Showcase ===== */
+
 .innovation-showcase-grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
@@ -7494,7 +7494,7 @@ textarea.form-control {
   }
 }
 
-/* AI Page layout fixes */
+
 .ai-philosophy-layout {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -7525,7 +7525,7 @@ textarea.form-control {
   gap: 1.5rem;
 }
 
-/* FAQ Styles */
+
 .faq-grid {
   display: flex;
   flex-direction: column;
@@ -7605,7 +7605,7 @@ textarea.form-control {
   }
 }
 
-/* AI Hero Stats */
+
 .ai-stats-bar {
   display: flex;
   gap: 3rem;
@@ -7628,7 +7628,7 @@ textarea.form-control {
   margin-top: 0.5rem;
 }
 
-/* AI Cards & Toolkit */
+
 .ai-toolkit-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -7668,7 +7668,7 @@ textarea.form-control {
   margin-bottom: 1rem;
 }
 
-/* Workflows */
+
 .workflows-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -7706,7 +7706,7 @@ textarea.form-control {
   margin-top: 2px;
 }
 
-/* Lab Cards */
+
 .lab-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -7744,7 +7744,7 @@ textarea.form-control {
   }
 }
 
-/* Resource Hub Styles */
+
 .resource-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -7879,7 +7879,7 @@ textarea.form-control {
   }
 }
 
-/* AI Lab Interactive Tool Styles */
+
 .lab-tool-container {
   margin-bottom: 4rem;
 }
@@ -8061,7 +8061,7 @@ textarea.lab-input {
   }
 }
 
-/* Thesis Section Styling */
+
 .thesis-wrapper {
   display: grid;
   grid-template-columns: 0.8fr 1.2fr;
@@ -8140,7 +8140,7 @@ textarea.lab-input {
   }
 }
 
-/* Featured Book Showcase */
+
 .featured-book {
   background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
   border-radius: 30px;
@@ -8183,7 +8183,7 @@ textarea.lab-input {
   line-height: 1.6;
 }
 
-/* Modal Styling */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -8278,7 +8278,7 @@ textarea.lab-input {
    Resources Page Styles
    ===================================================================== */
 
-/* Featured Hero Specific Styles */
+
 .book-hero {
   padding-top: 140px;
   padding-bottom: 80px;
@@ -8400,7 +8400,7 @@ textarea.lab-input {
     0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
-/* Resource Grid Styles */
+
 .resource-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -8509,7 +8509,7 @@ textarea.lab-input {
   color: var(--accent);
 }
 
-/* Freebie Section Styles */
+
 .freebie-section {
   background: linear-gradient(
     135deg,
@@ -8597,7 +8597,7 @@ textarea.lab-input {
   }
 }
 
-/* YouTube-like Share Modal */
+
 .share-modal-overlay {
   position: fixed;
   top: 0;
@@ -8753,7 +8753,7 @@ textarea.lab-input {
   white-space: nowrap;
 }
 
-/* --- SEO & Inline Style Refactor --- */
+
 .theme-center-margin-1 {
   text-align: center;
   margin-bottom: 4rem;
@@ -9188,7 +9188,7 @@ textarea.lab-input {
   background: #4b5563;
 }
 
-/* Login Modal Specific Styles */
+
 .login-modal-content {
   max-width: 400px;
   text-align: center;
@@ -9203,7 +9203,7 @@ textarea.lab-input {
   top: -5px;
 }
 
-/* Keyboard Shortcuts Modal */
+
 .shortcuts-modal-overlay {
   position: fixed;
   top: 0;
@@ -9288,7 +9288,7 @@ textarea.lab-input {
   margin-right: 8px;
 }
 
-/* Fix viewer-page layout overlapping with fixed pill navbar */
+
 .viewer-page .article-container {
   padding-top: max(140px, 15vh) !important;
 }
@@ -9299,7 +9299,7 @@ textarea.lab-input {
   }
 }
 
-/* --- Page Transitions --- */
+
 body.page-transition {
   opacity: 1;
   transition: opacity 0.4s ease-in-out;
@@ -9309,7 +9309,7 @@ body.fade-in {
   opacity: 0;
 }
 
-/* --- Form Shake Animation --- */
+
 @keyframes formShake {
   0%,
   100% {
@@ -9328,7 +9328,7 @@ body.fade-in {
   animation: formShake 0.4s ease-in-out;
 }
 
-/* Contact Form Status */
+
 .contact-status-message {
   display: none;
   margin-top: 1rem;
@@ -9349,7 +9349,7 @@ body.fade-in {
   color: var(--success-color, #16a34a);
 }
 
-/* Contact Success Card */
+
 .contact-success {
   text-align: center;
   padding: 3rem 1rem;
@@ -9391,7 +9391,7 @@ body.fade-in {
   }
 }
 
-/* Mobile CTA in Hamburger Menu */
+
 .mobile-cta {
   margin-top: 1.5rem;
   padding: 0.75rem 2rem;
@@ -9402,14 +9402,14 @@ body.fade-in {
   display: inline-block;
 }
 
-/* Subscribe Button Hover (replaces inline onmouseover) */
+
 .theme-29:hover {
   opacity: 0.9;
 }
 
-/* ===== Comprehensive Responsive Fixes for index.html ===== */
 
-/* Hero section stats bar */
+
+
 @media (max-width: 480px) {
   .ai-hero-stats {
     flex-direction: column;
@@ -9431,7 +9431,7 @@ body.fade-in {
   }
 }
 
-/* Skills Grid */
+
 @media (max-width: 640px) {
   .skills-grid {
     grid-template-columns: 1fr !important;
@@ -9445,7 +9445,7 @@ body.fade-in {
   }
 }
 
-/* Focus Grid */
+
 @media (max-width: 640px) {
   .focus-grid {
     grid-template-columns: 1fr !important;
@@ -9456,7 +9456,7 @@ body.fade-in {
   }
 }
 
-/* Values Grid */
+
 @media (max-width: 640px) {
   .values-grid {
     grid-template-columns: 1fr !important;
@@ -9467,7 +9467,7 @@ body.fade-in {
   }
 }
 
-/* Innovation Showcase - Case Studies */
+
 @media (max-width: 640px) {
   .innovation-showcase-grid {
     gap: 1rem;
@@ -9483,7 +9483,7 @@ body.fade-in {
   }
 }
 
-/* Bento Toolkit – AI Tools */
+
 @media (max-width: 640px) {
   .bento-toolkit {
     grid-template-columns: 1fr !important;
@@ -9494,7 +9494,7 @@ body.fade-in {
   }
 }
 
-/* Newsletter Section */
+
 @media (max-width: 600px) {
   #newsletter-form {
     flex-direction: column;
@@ -9509,7 +9509,7 @@ body.fade-in {
   }
 }
 
-/* Contact Grid */
+
 @media (max-width: 640px) {
   .contact-grid {
     gap: 2rem;
@@ -9523,7 +9523,7 @@ body.fade-in {
   }
 }
 
-/* Footer responsive */
+
 @media (max-width: 480px) {
   .footer-grid {
     gap: 1.5rem;
@@ -9538,7 +9538,7 @@ body.fade-in {
   }
 }
 
-/* Latest Writings / Blog grid on home */
+
 @media (max-width: 640px) {
   .blog-grid {
     grid-template-columns: 1fr !important;
@@ -9546,7 +9546,7 @@ body.fade-in {
   }
 }
 
-/* Section titles on small screens */
+
 @media (max-width: 480px) {
   .section-title {
     font-size: 1.5rem;
@@ -9556,7 +9556,7 @@ body.fade-in {
   }
 }
 
-/* Marquee text smaller on mobile */
+
 @media (max-width: 480px) {
   .marquee-item {
     font-size: 0.8rem;
@@ -9564,20 +9564,20 @@ body.fade-in {
   }
 }
 
-/* Hide Let's Talk from header on mobile — only show in hamburger menu */
+
 @media (max-width: 900px) {
   .nav-cta-wrapper {
     display: none;
   }
 }
 
-/* Back to top hides near footer to not block view */
+
 .scroll-top-btn.near-footer {
   opacity: 0 !important;
   pointer-events: none !important;
 }
 
-/* Resources page responsive */
+
 @media (max-width: 640px) {
   .freebie-content h3 {
     font-size: 1.75rem;
@@ -9606,7 +9606,7 @@ body.fade-in {
   }
 }
 
-/* Contact page responsive */
+
 @media (max-width: 640px) {
   .contact-left h1 {
     font-size: 2rem;
@@ -9629,7 +9629,7 @@ body.fade-in {
   }
 }
 
-/* ===== Merged: loading.css ===== */
+
 .loading-bar {
   position: fixed;
   top: 0;
@@ -9659,7 +9659,7 @@ body.fade-in {
   }
 }
 
-/* ===== Merged: error_page.css ===== */
+
 .error-page {
   font-family: "Poppins", sans-serif;
   background: var(--bg-color, #0a0f16);
@@ -9741,7 +9741,7 @@ body.fade-in {
   }
 }
 
-/* Pulse: top-right share/star + clean TOC rail */
+
 @media (min-width: 1300px) {
   .viewer-page .article-actions-floating {
     top: 1.1rem;
@@ -9925,7 +9925,7 @@ body.focus-mode #floating-toc-wrap {
   pointer-events: none;
 }
 
-/* Pulse: selector-precedence fixes */
+
 @media (min-width: 1300px) {
   .viewer-page .article-actions-floating .floating-btn {
     width: auto;
@@ -9953,7 +9953,7 @@ body.focus-mode #floating-toc-wrap {
   }
 }
 
-/* Pulse: force top-right actions and right TOC rail on all screens */
+
 .viewer-page .article-actions-floating {
   top: 1rem !important;
   right: 1rem !important;
@@ -10102,7 +10102,7 @@ body.focus-mode #floating-toc-wrap {
   }
 }
 
-/* Pulse: final light blend (top-right actions + right TOC rail) */
+
 .viewer-page .article-actions-floating {
   top: clamp(1rem, 2vw, 1.35rem) !important;
   right: clamp(0.75rem, 2vw, 1.2rem) !important;
@@ -10290,7 +10290,7 @@ body.focus-mode #floating-toc-wrap {
   }
 }
 
-/* Pulse: TOC hover reveal fix */
+
 .viewer-page .floating-toc {
   opacity: 0;
   visibility: hidden;
@@ -10311,7 +10311,7 @@ body.focus-mode #floating-toc-wrap {
   transform: translateX(0);
 }
 
-/* Pulse: compact controls + comment collapse */
+
 .viewer-page .floating-toc-trigger {
   justify-content: center;
   gap: 6px;
@@ -10416,7 +10416,7 @@ body.focus-mode #floating-toc-wrap {
   }
 }
 
-/* Pulse: toc + comment-like final tweaks */
+
 .comments-heading-row {
   display: flex;
   align-items: center;
@@ -10487,7 +10487,7 @@ body.focus-mode #floating-toc-wrap {
   display: none;
 }
 
-/* Pulse: final polish override */
+
 .viewer-page .floating-toc-trigger {
   justify-content: center;
   gap: 5px;
@@ -10579,7 +10579,7 @@ body.focus-mode #floating-toc-wrap {
   }
 }
 
-/* Pulse: circular share + compact toc chip */
+
 .viewer-page #btn-share-menu.share-pill-btn {
   width: 34px;
   min-width: 34px;
@@ -10674,7 +10674,7 @@ body.focus-mode #floating-toc-wrap {
   }
 }
 
-/* Pulse: final share + right-rail spacing fix */
+
 .viewer-page .article-actions-floating {
   right: max(1rem, calc(50% - 34rem)) !important;
 }
@@ -10734,7 +10734,7 @@ body.focus-mode #floating-toc-wrap {
   }
 }
 
-/* Pulse: share + single-scroll polish */
+
 .viewer-page .article-actions-floating {
   right: 1.2rem !important;
 }
@@ -10782,7 +10782,7 @@ body.focus-mode #floating-toc-wrap {
   height: 2.4px;
 }
 
-/* Pulse: ultimate right-edge cleanup */
+
 .viewer-page .article-actions-floating {
   right: max(1rem, calc(50% - 34rem)) !important;
 }
@@ -10822,7 +10822,7 @@ body.focus-mode #floating-toc-wrap {
   }
 }
 
-/* Pulse: final TOC + single-scroll lock */
+
 html,
 body {
   overflow-x: hidden;
@@ -10918,7 +10918,7 @@ body.viewer-page .floating-toc::-webkit-scrollbar {
   }
 }
 
-/* Pulse Viewer Refresh: cohesive layout + reliable TOC rail */
+
 body.viewer-page {
   --pulse-bg-a: #f8fafc;
   --pulse-bg-b: #eef2ff;
@@ -11312,7 +11312,7 @@ body.viewer-page .floating-toc-link.active {
   }
 }
 
-/* Viewer Final Overrides: default navbar + notion-style toc + article-only focus */
+
 body.viewer-page .navbar {
   position: fixed !important;
   top: 1.2rem !important;
@@ -11627,7 +11627,7 @@ body.viewer-page.focus-mode .article-content {
   }
 }
 
-/* Viewer Final Lock: single scrollbar only */
+
 html,
 body.viewer-page {
   height: auto !important;

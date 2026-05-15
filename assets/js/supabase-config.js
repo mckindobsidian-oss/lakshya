@@ -1,6 +1,6 @@
-const SUPABASE_URL = "https://hzxwqxmldlncrhqxlnlq.supabase.co";
+const SUPABASE_URL = "https://pgodkcoykowrvimjjphb.supabase.co";
 const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6eHdxeG1sZGxuY3JocXhsbmxxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxODIwMDEsImV4cCI6MjA4NTc1ODAwMX0.pP3i8KquZmqhiUkaTw3ROi86mslTyzK5ysD2va1JI10";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnb2RrY295a293cnZpbWpqcGhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MTkxNTQsImV4cCI6MjA5NDM5NTE1NH0.8PABMAd5IGj3kvmkZu8kLLatnx9xizE6CUVCWICFZms";
 
 function initSharedSupabase() {
   if (typeof window.supabase !== "undefined" && !window.supabaseClient) {
