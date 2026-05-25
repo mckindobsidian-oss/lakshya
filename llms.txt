@@ -1,61 +1,30 @@
-# Khushaank Gupta — Portfolio & Blog
+# Lakshya Gupta - Portfolio & Blog
 
-> Personal website of Khushaank Gupta, an ACCA student and finance student at Delhi University. The site showcases global financial strategy, AI-integrated research, a blog on finance and economics, and interactive financial tools.
+> Personal website of Lakshya Gupta, a chess player and Delhi University student. The site showcases chess strategy, AI-assisted study, practical web projects, and technology experiments.
 
 ## Owner
-- Name: Khushaank Gupta
-- Role: ACCA Student & Finance Student, Delhi University
-- Email: khushaankgupta@gmail.com
-- LinkedIn: https://www.linkedin.com/in/khushaank
-- Twitter/X: https://x.com/Khushaankgupta
+- Name: Lakshya Gupta
+- Role: Chess Player & Tech Enthusiast, Delhi University
+- Email: lakshyagupta@gmail.com
+- LinkedIn: https://www.linkedin.com/in/lakshya
+- Twitter/X: https://x.com/Lakshyagupta
 
 ## Site Information
-- URL: https://khushaankgupta.qzz.io
-- Tech Stack: HTML, CSS, Vanilla JavaScript, Supabase (backend), Lucide Icons
+- URL: https://lakshyagupta.qzz.io
+- Tech Stack: HTML, CSS, Vanilla JavaScript, Supabase, Lucide Icons
 - Hosting: Netlify
-- Last Updated: 2026-04-02
 
 ## Pages
-
-### / (Homepage)
-Portfolio homepage with about section, skills overview, project showcase, AI toolkit, timeline, and contact. Serves as the primary landing page.
-
-### /blog (Financial Chronicles)
-Blog listing page featuring articles on corporate tax structures, financial risk assessment, market trends, and economic analysis. Posts are fetched dynamically from Supabase.
-
-### /ai (AI & Quantitative Finance)
-Dedicated page showcasing the intersection of AI and traditional finance — includes quantitative modeling philosophy, Python automation workflows, and AI tool usage.
-
-### /pulse/ (Article Viewer)
-Dynamic article reader with table of contents, reading progress bar, focus mode, in-article search, related posts, and a comment system with Google OAuth.
-
-### /resources (Resources)
-A collection of helpful tools, financial models, audit kits, LLM prompts, and strategic templates for finance and AI professionals.
-
-### /contact (Contact)
-Get in touch directly via email, contact form (Web3Forms), and linked social profiles.
-
-### /privacy (Privacy Policy)
-Standard privacy policy covering data collection, cookies, analytics, and user rights.
-
-### /terms (Terms & Conditions)
-Terms of service governing use of the website and its tools.
+- /: Portfolio homepage with about, skills, projects, AI toolkit, writings, and contact.
+- /blog: Chess-Tech Chronicles with posts on chess, AI, code, and learning systems.
+- /ai: AI, Chess & Technology page for study workflows, Python tools, and automation ideas.
+- /pulse/: Dynamic article reader.
+- /resources: Chess-tech resources, prompts, templates, and study systems.
+- /contact: Contact form and social links.
 
 ## Expertise Areas
-- ACCA (Association of Chartered Certified Accountants) qualification preparation
-- Corporate tax structures & GST
-- Financial risk assessment & auditing
-- Market volatility analysis
-- AI and data science in finance
-- Quantitative modeling with Python
-
-## Professional Files
-- Sitemap: https://khushaankgupta.qzz.io/sitemap.xml
-- RSS Feed: https://khushaankgupta.qzz.io/rss.xml
-- Robots: https://khushaankgupta.qzz.io/robots.txt
-- Security: https://khushaankgupta.qzz.io/.well-known/security.txt
-- Humans: https://khushaankgupta.qzz.io/humans.txt
-
-## Optional
-- Contact: khushaankgupta@gmail.com
-- Full context: https://khushaankgupta.qzz.io/llms-full.txt
+- Chess strategy and game review
+- AI-assisted chess analysis
+- Python and web development
+- Study dashboards and automation
+- Learning systems and technical writing

@@ -1,5 +1,5 @@
-# Khushaank Gupta — Portfolio & Blog
-# https://khushaankgupta.qzz.io
+# Lakshya Gupta — Portfolio & Blog
+# https://lakshyagupta.qzz.io
 
 # Crawl Delay to prevent server overload
 User-agent: *
@@ -50,11 +50,11 @@ User-agent: CCBot
 Allow: /
 
 # Sitemaps
-Sitemap: https://khushaankgupta.qzz.io/sitemap.xml
+Sitemap: https://lakshyagupta.qzz.io/sitemap.xml
 
 # RSS Feed
 Allow: /rss.xml
 
 # Host
-Host: https://khushaankgupta.qzz.io
+Host: https://lakshyagupta.qzz.io
 

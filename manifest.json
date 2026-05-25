@@ -1,14 +1,14 @@
 {
-  "name": "Khushaank Gupta — AI, Strategy & Finance",
-  "short_name": "Khushaank",
-  "description": "Portfolio of Khushaank Gupta — an ACCA student merging global financial standards with AI & Data Science.",
+  "name": "Lakshya Gupta — Chess, Code & Strategy",
+  "short_name": "Lakshya",
+  "description": "Portfolio of Lakshya Gupta - a chess player blending strategy, AI, code, and technology.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#fafafa",
   "theme_color": "#ffffff",
   "orientation": "any",
-  "categories": ["finance", "technology", "education"],
+  "categories": ["chess", "technology", "education"],
   "lang": "en",
   "icons": [
     {

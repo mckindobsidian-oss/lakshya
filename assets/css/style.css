@@ -1622,10 +1622,10 @@ footer {
 }
 
 .clap-action.clapped .icon-circle-floating {
-  background: rgba(225, 29, 72, 0.08);
+  background: rgba(249, 115, 22, 0.08);
 }
 .clap-action.clapped {
-  color: #e11d48;
+  color: #f97316;
 }
 
 @media (max-width: 1299px) {
@@ -1765,8 +1765,8 @@ footer {
   }
 
   .viewer-page .clap-action.clapped {
-    color: #ef4444;
-    border-color: rgba(239, 68, 68, 0.65);
+    color: #f97316;
+    border-color: rgba(249, 115, 22, 0.65);
     background: rgba(255, 255, 255, 0.95);
   }
 
@@ -2063,15 +2063,15 @@ footer {
 }
 
 .clap-action.clapped {
-  border-color: #e11d48;
-  color: #e11d48;
-  background: rgba(225, 29, 72, 0.06);
+  border-color: #f97316;
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.08);
 }
 
 .clap-action.clapped i,
 .clap-action.clapped svg {
-  fill: #e11d48;
-  color: #e11d48;
+  fill: #f97316;
+  color: #f97316;
 }
 
 .clap-action .clap-burst {
@@ -3573,9 +3573,10 @@ footer {
 }
 
 .clap-action.clapped svg {
-  color: #ef4444 !important;
-  fill: #ef4444 !important;
-  stroke: #ef4444 !important;
+  color: #f97316 !important;
+  fill: rgba(249, 115, 22, 0.15) !important;
+  stroke: #f97316 !important;
+  stroke-width: 2.5px;
 }
 
 .clap-action:disabled {
@@ -3589,7 +3590,7 @@ footer {
 }
 
 .clap-action.clapped #clap-count {
-  color: #ef4444;
+  color: #f97316;
 }
 
 @keyframes clapPulse {
@@ -6313,15 +6314,15 @@ button:focus-visible {
 }
 
 .clap-action.clapped {
-  border-color: #ef4444;
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.06);
+  border-color: #f97316;
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.08);
 }
 
 .clap-action.clapped i,
 .clap-action.clapped svg {
-  fill: #ef4444;
-  color: #ef4444;
+  fill: #f97316;
+  color: #f97316;
 }
 
 .article-content {

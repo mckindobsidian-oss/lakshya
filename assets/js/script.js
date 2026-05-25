@@ -251,10 +251,10 @@ function initCommunityPopup() {
         <button class="cp-close" aria-label="Close">×</button>
         <div class="cp-icon">✨</div>
         <h3 class="cp-title">Join the Community</h3>
-        <p class="cp-desc">Get exclusive insights on Finance, AI, and Strategy delivered to your inbox.</p>
+        <p class="cp-desc">Get exclusive insights on Chess, AI, and Strategy delivered to your inbox.</p>
         <div class="cp-actions">
           <a href="#newsletter-form" class="btn-cp-primary" id="cp-subscribe-btn">Subscribe Free</a>
-          <a href="https://www.linkedin.com/in/khushaank/" target="_blank" class="btn-cp-outline" id="cp-linkedin-btn">
+          <a href="https://www.linkedin.com/in/lakshya/" target="_blank" class="btn-cp-outline" id="cp-linkedin-btn">
             <i data-lucide="linkedin" width="18" height="18"></i> Follow
           </a>
         </div>
@@ -1271,7 +1271,7 @@ async function initViewerPage() {
         const articleBodyText =
           document.getElementById("article-body")?.innerText || "";
         const contentSnippet = articleBodyText.substring(0, 300) + "...";
-        const text = `I just read this post by Khushaank Gupta: "${title}"\n\n${contentSnippet}\n\nRead on the link: ${shareUrl}`;
+        const text = `I just read this post by Lakshya Gupta: "${title}"\n\n${contentSnippet}\n\nRead on the link: ${shareUrl}`;
 
         // Update social links
         document.getElementById("share-whatsapp").href =
@@ -1376,7 +1376,7 @@ async function initViewerPage() {
 
       const embedHtml = `
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; max-width: 600px; background: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); color: #1e293b;">
-  <div style="font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase;">Khushaank Gupta Insights</div>
+  <div style="font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase;">Lakshya Gupta Insights</div>
   <h3 style="margin: 0 0 12px 0; font-size: 22px; font-weight: 700; color: #0f172a; line-height: 1.3;">${title}</h3>
   <p style="margin: 0 0 20px 0; color: #475569; line-height: 1.6; font-size: 16px;">${excerpt}</p>
   <div style="border-top: 1px solid #f1f5f9; padding-top: 16px; margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
@@ -1406,15 +1406,15 @@ function initInteractions(data) {
     "@type": "Article",
     headline: data.title,
     image: [
-      data.image_url || "https://khushaankgupta.qzz.io/assets/images/hero.webp",
+      data.image_url || "https://lakshyagupta.qzz.io/assets/images/hero.webp",
     ],
     datePublished: data.created_at,
     dateModified: data.created_at,
     author: [
       {
         "@type": "Person",
-        name: "Khushaank Gupta",
-        url: "https://khushaankgupta.qzz.io",
+        name: "Lakshya Gupta",
+        url: "https://lakshyagupta.qzz.io",
       },
     ],
   };
@@ -1441,11 +1441,11 @@ function initInteractions(data) {
         btn.classList.toggle("clapped", hasClapped);
         btn.disabled = hasClapped;
         btn.title = hasClapped
-          ? "You've already liked this article"
-          : "Like this article";
+          ? "You've already upvoted this article"
+          : "Upvote this article";
         btn.setAttribute("aria-pressed", hasClapped ? "true" : "false");
         if (likeLabel) {
-          likeLabel.textContent = hasClapped ? "Liked" : "Like";
+          likeLabel.textContent = hasClapped ? "Upvoted" : "Upvote";
         }
       });
     };
@@ -1462,7 +1462,7 @@ function initInteractions(data) {
         if (loginModal) {
           loginModal.classList.add("active");
         } else {
-          alert("Please sign in to like this article");
+          alert("Please sign in to upvote this article");
           const loginBtn = document.getElementById("google-login-btn");
           if (loginBtn) {
             loginBtn.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1625,7 +1625,7 @@ async function loadArticle(slug) {
       window.history.replaceState({ path: newUrl }, "", newUrl);
     }
 
-    document.title = `${data.title} - Khushaank Gupta`;
+    document.title = `${data.title} - Lakshya Gupta`;
 
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.content = data.excerpt || data.title;
@@ -1677,8 +1677,8 @@ async function loadArticle(slug) {
         image: data.image_url ? [data.image_url] : [],
         author: {
           "@type": "Person",
-          name: "Khushaank Gupta",
-          url: "https://khushaankgupta.qzz.io/",
+          name: "Lakshya Gupta",
+          url: "https://lakshyagupta.qzz.io/",
         },
         datePublished: data.created_at,
         dateModified: data.updated_at || data.created_at,
@@ -2261,7 +2261,7 @@ async function loadComments(postId, retries = 0) {
 
   const renderCommentCard = (c) => {
     const isAuthor =
-      c.user_name === "Khushaank Gupta" || c.user_name === "Khushaank";
+      c.user_name === "Lakshya Gupta" || c.user_name === "Lakshya";
     const authorClass = isAuthor ? " author-comment" : "";
     const badge = isAuthor ? '<span class="author-badge">Author</span>' : "";
     const dateStr = new Date(c.created_at).toLocaleDateString("en-US", {

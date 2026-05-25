@@ -1143,9 +1143,9 @@ form.addEventListener("submit", async (e) => {
       await supabaseClient.from("comments").insert([
         {
           post_id: newPost.id,
-          user_name: "Khushaank Gupta",
+          user_name: "Lakshya Gupta",
           content:
-            "Thank you for visiting this post and reading it! 🙏 Hope you enjoyed it. Follow for more insights and updates on finance, AI, and technology!",
+            "Thank you for visiting this post and reading it! 🙏 Hope you enjoyed it. Follow for more insights and updates on chess, AI, and technology!",
         },
       ]);
     }
@@ -1242,15 +1242,15 @@ async function deletePost(id) {
 }
 
 const defaultSettings = {
-  blogTitle: "Khushaank's Blog",
-  authorName: "Khushaank",
+  blogTitle: "Lakshya's Blog",
+  authorName: "Lakshya",
   tagline: "Thoughts on tech and design...",
   socialLinkedIn: "",
   socialGithub: "",
   socialX: "",
-  seoDesc: "Khushaank Gupta - AI Engineer & Developer Portfolio",
+  seoDesc: "Lakshya Gupta - AI Engineer & Developer Portfolio",
   seoKeywords:
-    "Khushaank Gupta, AI Engineer, Machine Learning, Web Developer, Portfolio",
+    "Lakshya Gupta, AI Engineer, Machine Learning, Web Developer, Portfolio",
   compactView: false,
   maintMode: false,
   autosave: "60",
