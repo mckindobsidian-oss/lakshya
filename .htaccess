@@ -7,9 +7,6 @@ Options -Indexes
     Deny from all
 </FilesMatch>
 
-# Force remove .html extension from external requests
-RewriteCond %{THE_REQUEST} /([^.]+)\.html [NC]
-RewriteRule ^ /%1 [L,R=301]
 
 # Rewrite /pulse/slug to pulse/index.html?slug=slug
 RewriteCond %{REQUEST_FILENAME} !-f

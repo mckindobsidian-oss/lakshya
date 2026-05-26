@@ -1,6 +1,6 @@
 # Lakshya Gupta - Full Site Context for LLMs
 
-Lakshya Gupta is a chess player and Delhi University student building a personal website around chess, technology, AI-assisted learning, and practical software experiments.
+Lakshya Gupta is a chess player building a personal website around chess, technology, AI-assisted learning, and practical software experiments.
 
 He is passionate about:
 - Chess strategy, tactics, openings, and endgames

@@ -191,7 +191,7 @@ function initPage() {
   const navLinks = document.querySelectorAll(".nav-link");
   navLinks.forEach((link) => {
     if (link.textContent.trim() === "Insights") {
-      link.setAttribute("href", "/blog");
+      link.setAttribute("href", "/blog.html");
     }
   });
 
@@ -580,79 +580,6 @@ async function navigateTo(url) {
   }
 }
 
-document.addEventListener("click", (e) => {
-  if (e.defaultPrevented || e.button !== 0) return;
-  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-
-  const link = e.target.closest("a");
-  if (!link) return;
-
-  const href = link.getAttribute("href");
-
-  if (
-    !href ||
-    href.startsWith("#") ||
-    href.startsWith("mailto:") ||
-    href.startsWith("http") ||
-    link.target === "_blank"
-  ) {
-    if (href.startsWith(window.location.origin)) {
-    } else if (href.startsWith("http")) {
-      return;
-    } else {
-      return;
-    }
-  }
-
-  let destination;
-  try {
-    destination = new URL(href, window.location.origin);
-  } catch {
-    return;
-  }
-
-  const path = destination.pathname.toLowerCase();
-  const currentPath = window.location.pathname.toLowerCase();
-  const isViewerRoute =
-    path === "/pulse" || path === "/pulse/" || path.startsWith("/pulse/");
-  const isCurrentViewerRoute =
-    currentPath === "/pulse" ||
-    currentPath === "/pulse/" ||
-    currentPath.startsWith("/pulse/");
-
-  // Use full page loads for viewer routes so article state/meta never gets stale.
-  if (isViewerRoute || isCurrentViewerRoute) {
-    return;
-  }
-
-  if (destination.origin !== window.location.origin) {
-    window.location.href = href;
-    return;
-  }
-
-  e.preventDefault();
-
-  if (
-    destination.pathname === window.location.pathname &&
-    destination.search === window.location.search
-  ) {
-    if (destination.hash) {
-      const target = document.querySelector(destination.hash);
-      if (target) target.scrollIntoView({ behavior: "smooth" });
-
-      if (window.location.hash !== destination.hash) {
-        window.history.pushState({}, "", destination.href);
-      }
-      return;
-    } else if (destination.href === window.location.href.split("#")[0]) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-  }
-
-  navigateTo(destination.href);
-});
-
 let currentSPAUrl = window.location.pathname;
 
 window.addEventListener("popstate", () => {
@@ -677,7 +604,7 @@ if ("serviceWorker" in navigator) {
         registration.unregister();
       }
     })
-    .catch((e) => {});
+    .catch((e) => { });
 }
 
 if (document.readyState === "complete") {
@@ -737,15 +664,36 @@ async function loadProjects() {
     item.setAttribute("data-index", index);
     const num = (index + 1).toString().padStart(2, "0");
 
-    item.innerHTML = `
-      <span class="p-num">${num}</span>
-      <div class="p-header">
-        <h3>${proj.title}</h3>
-        <span class="p-tag">${proj.category}</span>
-      </div>
-      <i data-lucide="arrow-right" class="p-arrow"></i>
-      <div class="p-mobile-desc" style="display:none">${proj.description}</div> 
-    `;
+    const spanNum = document.createElement("span");
+    spanNum.className = "p-num";
+    spanNum.textContent = num;
+
+    const divHeader = document.createElement("div");
+    divHeader.className = "p-header";
+
+    const h3 = document.createElement("h3");
+    h3.textContent = proj.title;
+
+    const spanTag = document.createElement("span");
+    spanTag.className = "p-tag";
+    spanTag.textContent = proj.category;
+
+    divHeader.appendChild(h3);
+    divHeader.appendChild(spanTag);
+
+    const iArrow = document.createElement("i");
+    iArrow.setAttribute("data-lucide", "arrow-right");
+    iArrow.className = "p-arrow";
+
+    const divDesc = document.createElement("div");
+    divDesc.className = "p-mobile-desc";
+    divDesc.style.display = "none";
+    divDesc.textContent = proj.description;
+
+    item.appendChild(spanNum);
+    item.appendChild(divHeader);
+    item.appendChild(iArrow);
+    item.appendChild(divDesc);
 
     item.onmouseenter = () => updatePreview(index);
     item.onclick = () => updatePreview(index);
@@ -789,6 +737,16 @@ function updatePreview(index) {
   }
 }
 
+function escapeHTML(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function createPostCardHtml(post) {
   const date = new Date(post.created_at).toLocaleDateString("en-US", {
     month: "short",
@@ -796,19 +754,20 @@ function createPostCardHtml(post) {
     year: "numeric",
   });
 
-  const bgStyle = post.image_url
-    ? `background-image: url('${post.image_url}')`
+  const escapedImageUrl = post.image_url ? encodeURI(post.image_url) : "";
+  const bgStyle = escapedImageUrl
+    ? `background-image: url('${escapedImageUrl}')`
     : "background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%)";
 
   return `
     <a href="${buildPulseUrl(post.slug || post.id, generateTrackingId())}" class="blog-card fade-in" style="text-decoration: none;">
       <div class="blog-img" style="${bgStyle}"></div>
       <div class="blog-body">
-        <span class="blog-cat">${post.category || "Insight"}</span>
-        <h3 class="blog-title">${post.title}</h3>
-        <p class="blog-excerpt">${post.excerpt || ""}</p>
+        <span class="blog-cat">${escapeHTML(post.category || "Insight")}</span>
+        <h3 class="blog-title">${escapeHTML(post.title)}</h3>
+        <p class="blog-excerpt">${escapeHTML(post.excerpt || "")}</p>
         <div class="blog-footer">
-           <span>${date}</span>
+           <span>${escapeHTML(date)}</span>
            <span style="display: flex; align-items: center; gap: 4px; font-weight: 500; color: var(--accent);">
              Read <i data-lucide="arrow-right" style="width: 14px;"></i>
            </span>
@@ -1096,13 +1055,13 @@ function initViewerBackButton() {
   const backBtn = document.getElementById("viewer-back-btn");
   if (!backBtn) return;
 
-  const fallbackPath = "/blog";
+  const fallbackPath = "/blog.html";
   let referrer = null;
   try {
     if (document.referrer) {
       referrer = new URL(document.referrer);
     }
-  } catch {}
+  } catch { }
   const isSameOriginReferrer =
     referrer && referrer.origin === window.location.origin;
   const canGoBack = window.history.length > 1 && isSameOriginReferrer;
@@ -1157,10 +1116,10 @@ async function initViewerPage() {
       window.location.pathname.endsWith("/pulse/index.html") ||
       window.location.pathname.endsWith("/pulse/")
     ) {
-      window.location.href = "/blog";
+      window.location.href = "/blog.html";
       return;
     }
-    window.location.href = "/blog";
+    window.location.href = "/blog.html";
     return;
   }
 
@@ -1497,7 +1456,7 @@ function initInteractions(data) {
             claps = refreshedPost.claps;
             if (clapCount) clapCount.textContent = claps.toString();
           }
-        } catch {}
+        } catch { }
       } catch (err) {
         claps -= 1;
         if (clapCount) clapCount.textContent = claps.toString();
@@ -2659,21 +2618,23 @@ async function loadRelatedPosts(currentPost) {
     section.style.display = "block";
     grid.innerHTML = related
       .map(
-        (post) => `
+        (post) => {
+          const escapedImageUrl = post.image_url ? encodeURI(post.image_url) : "";
+          return `
         <a href="${buildPulseUrl(post.slug || post.id, generateTrackingId())}" class="post-card fade-in">
-          <div class="post-image" style="background: ${
-            post.image_url
-              ? `url('${post.image_url}')`
-              : "linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%)"
+          <div class="post-image" style="background: ${escapedImageUrl
+            ? `url('${escapedImageUrl}')`
+            : "linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%)"
           }; background-size: cover; background-position: center;"></div>
           <div class="post-content">
-            <span class="post-date">${new Date(post.created_at).toLocaleDateString()}</span>
-            <h3 class="post-title" style="font-size: 1.1rem;">${post.title}</h3>
-            <p class="post-excerpt" style="font-size: 0.9rem; -webkit-line-clamp: 2;">${post.excerpt || ""}</p>
+            <span class="post-date">${escapeHTML(new Date(post.created_at).toLocaleDateString())}</span>
+            <h3 class="post-title" style="font-size: 1.1rem;">${escapeHTML(post.title)}</h3>
+            <p class="post-excerpt" style="font-size: 0.9rem; -webkit-line-clamp: 2;">${escapeHTML(post.excerpt || "")}</p>
             <span class="read-more">Read Article <i data-lucide="arrow-right" size="16"></i></span>
           </div>
         </a>
-      `,
+      `;
+        }
       )
       .join("");
 
@@ -2783,11 +2744,10 @@ function initLinkPreview() {
 
       if (postData) {
         previewCard.innerHTML = `
-            ${
-              postData.image_url
-                ? `<div class="preview-card-image" style="background-image: url('${postData.image_url}')"></div>`
-                : '<div class="preview-card-image" style="background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%)"></div>'
-            }
+            ${postData.image_url
+            ? `<div class="preview-card-image" style="background-image: url('${postData.image_url}')"></div>`
+            : '<div class="preview-card-image" style="background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%)"></div>'
+          }
             <div class="preview-card-content">
             <div class="preview-card-title">${postData.title}</div>
             <div class="preview-card-excerpt">${postData.excerpt || "No summary available."}</div>
@@ -2878,7 +2838,7 @@ function initLinkPreview() {
         });
         link.addEventListener("mouseleave", hidePreview);
       }
-    } catch (e) {}
+    } catch (e) { }
   });
 
   previewCard.addEventListener("mouseenter", () => clearTimeout(hideTimeout));
@@ -2952,7 +2912,7 @@ async function trackPageView() {
     }
 
     await window.supabaseClient.from("page_views").insert([payload]);
-  } catch (err) {}
+  } catch (err) { }
 }
 
 function openSearch() {
@@ -2976,7 +2936,7 @@ function closeSearch() {
 function performSearch(query) {
   if (!query) return;
 
-  window.location.href = `/blog?q=${encodeURIComponent(query)}`;
+  window.location.href = `/blog.html?q=${encodeURIComponent(query)}`;
 }
 
 window.openSearch = openSearch;

@@ -1,10 +1,10 @@
 # Lakshya Gupta - Portfolio & Blog
 
-> Personal website of Lakshya Gupta, a chess player and Delhi University student. The site showcases chess strategy, AI-assisted study, practical web projects, and technology experiments.
+> Personal website of Lakshya Gupta, a chess player. The site showcases chess strategy, AI-assisted study, practical web projects, and technology experiments.
 
 ## Owner
 - Name: Lakshya Gupta
-- Role: Chess Player & Tech Enthusiast, Delhi University
+- Role: Chess Player & Tech Enthusiast
 - Email: lakshyagupta@gmail.com
 - LinkedIn: https://www.linkedin.com/in/lakshya
 - Twitter/X: https://x.com/Lakshyagupta
